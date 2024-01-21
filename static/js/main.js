@@ -75,7 +75,7 @@ function setupScene() {
     setupCamera();
     initCube(scene, THREE, config);
 
-    if (config.debug){
+    if (config.debug) {
         const axesHelper = new THREE.AxesHelper(5);
         scene.add(axesHelper);
     }
