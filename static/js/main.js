@@ -60,7 +60,8 @@ function setupCamera(){
     camera.position.set(
         config.cameraPosition.x,
         config.cameraPosition.y,
-        config.cameraPosition.z);
+        config.cameraPosition.z
+    );
 }
 
 
