@@ -65,6 +65,7 @@ function setupCamera(){
 }
 
 
+// Scene setup
 function setupScene() {
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setClearColor(config.backgroundColor);
