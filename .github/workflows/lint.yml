@@ -1,0 +1,25 @@
+name: lint
+on: [push]
+# Make sure CI fails on all warnings, including Clippy lints
+env:
+  RUSTFLAGS: "-Dwarnings"
+
+jobs:
+  eslint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install dependencies
+      run: |
+        cd www
+        npm install eslint
+    - name: Analysing the code with eslint
+      run: |
+        npx eslint . --ext .js,.jsx,.ts,.tsx
+
+  rust-clippy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run Clippy
+        run: cargo clippy --all-targets --all-features
