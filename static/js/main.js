@@ -56,7 +56,7 @@ function setupLighting() {
 
 
 // Camera setup
-function setupCamera(){
+function setupCamera() {
     camera.position.set(
         config.cameraPosition.x,
         config.cameraPosition.y,
