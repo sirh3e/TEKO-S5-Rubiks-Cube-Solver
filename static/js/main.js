@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import {initCube, animateCube, onMouseClick} from './controls.js';
+import { initCube, animateCube, onMouseClick } from './controls.js';
 
 
 const config = {
