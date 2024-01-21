@@ -1,5 +1,5 @@
 # TEKO-S5-Rubiks-Cube-Solver
 
 ## Usage
-- npm install
+- `npm install`
 - npx vite
