@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "start": "npx vite"
+  },
   "dependencies": {
     "three": "^0.160.0"
   },
