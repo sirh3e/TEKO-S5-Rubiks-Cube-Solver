@@ -1,27 +1,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { initCube, animateCube, onMouseClick } from './controls.js';
-
-
-const config = {
-    debug: true,
-
-    cubeSize: 0.9,
-    cubeGap: 0.1,
-    cubeColor: 0xff0000, // Red
-
-    backgroundColor: 0xAAAAAA,
-
-    ambientLightColor: 0x404040,
-    ambientLightIntensity: 1,
-
-    directionalLightColor: 0xffffff,
-    directionalLightIntensity: 1,
-    directionalLightPosition: { x: 0, y: 1, z: 1 },
-
-    cameraPosition: { x: 5, y: 5, z: 5 }
-};
-
+import config from '/static/config/config.json';
 
 
 const scene = new THREE.Scene();
