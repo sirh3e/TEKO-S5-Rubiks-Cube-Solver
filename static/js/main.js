@@ -9,7 +9,6 @@ const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 const renderer = new THREE.WebGLRenderer({ antialias: true }); // Enable anti-aliasing
 const composer = new EffectComposer(renderer);
-
 const controls = new OrbitControls(camera, renderer.domElement);
 
 function onWindowResize() {
@@ -52,7 +51,8 @@ function setupScene() {
 
     setupLighting();
     setupCamera();
-    initCube(scene);
+
+    let cube = initCube(scene);
 
     if (config.debug) {
         const axesHelper = new THREE.AxesHelper(5);
@@ -63,6 +63,8 @@ function setupScene() {
 
     const renderPass = new RenderPass(scene, camera);
     composer.addPass(renderPass);
+
+    console.log(cube.getCubeState())
 }
 
 function animate() {

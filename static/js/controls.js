@@ -3,8 +3,10 @@ import Cube from './cube.js';
 
 
 export function initCube(scene) {
-    const cube = new Cube(scene);
+    let cube = new Cube(scene);
     cube.init();
+
+    return cube
 }
 
 export function onMouseClick(event, scene, camera) {

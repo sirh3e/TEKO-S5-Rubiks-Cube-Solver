@@ -16,6 +16,15 @@ class SubCube {
             [1,0,1],
         ]
 
+        this.faces = {
+            front: null,
+            back: null,
+            up: null,
+            down: null,
+            right: null,
+            left: null,
+        };
+
         this.x = x;
         this.y = y;
         this.z = z;
@@ -55,26 +64,32 @@ class SubCube {
         switch (index) {
             case 0: // front
                 faceMesh.position.z = cubeSize / 2;
+                this.faces.front = faceMesh;
                 break;
             case 1: // back
                 faceMesh.position.z = -cubeSize / 2;
                 faceMesh.rotation.y = Math.PI;
+                this.faces.back = faceMesh;
                 break;
             case 2: // up
                 faceMesh.position.y = cubeSize / 2;
                 faceMesh.rotation.x = -Math.PI / 2;
+                this.faces.up = faceMesh;
                 break;
             case 3: // down
                 faceMesh.position.y = -cubeSize / 2;
                 faceMesh.rotation.x = -Math.PI / 2;
+                this.faces.down = faceMesh;
                 break;
             case 4: // right
                 faceMesh.position.x = cubeSize / 2;
                 faceMesh.rotation.y = -Math.PI / 2;
+                this.faces.right = faceMesh;
                 break;
             case 5: // left
                 faceMesh.position.x = -cubeSize / 2;
                 faceMesh.rotation.y = Math.PI / 2;
+                this.faces.left = faceMesh;
                 break;
         }
 
@@ -156,6 +171,7 @@ class SubCube {
             }
         }
     }
+
 }
 
 export default SubCube;

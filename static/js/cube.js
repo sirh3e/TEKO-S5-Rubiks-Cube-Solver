@@ -48,6 +48,21 @@ class Cube {
         }
     }
 
+    // Method to get the current state of the Rubik's Cube
+    getCubeState() {
+        const cubeState = {
+            U: [],  // Up face
+            D: [],  // Down face
+            L: [],  // Left face
+            R: [],  // Right face
+            F: [],  // Front face
+            B: []   // Back face
+        };
+
+        // TODO
+        return cubeState;
+    }
+
 }
 
 export default Cube;
