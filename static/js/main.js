@@ -12,8 +12,12 @@ const composer = new EffectComposer(renderer);
 const controls = new OrbitControls(camera, renderer.domElement);
 
 function onWindowResize() {
+    // Update the camera's aspect ratio
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
+
+    // Update renderer and composer sizes
+    renderer.setSize(window.innerWidth, window.innerHeight);
     composer.setSize(window.innerWidth, window.innerHeight);
 }
 
