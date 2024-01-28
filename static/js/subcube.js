@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { FaceDirection } from './face.js'
 
 class SubCube {
     constructor(x, y, z, faceColors, cubeSize, cubeGap) {
@@ -52,7 +53,7 @@ class SubCube {
         const faceGeometry = new THREE.PlaneGeometry(cubeSize, cubeSize);
         const faceMaterial = new THREE.MeshStandardMaterial({
             color: color.hex,
-            side: THREE.DoubleSide  // double sided mesh
+            side: THREE.DoubleSide
         });
 
         const faceMesh = new THREE.Mesh(faceGeometry, faceMaterial);
@@ -62,31 +63,31 @@ class SubCube {
         faceMesh.userData.parentSubCube = this;
 
         switch (index) {
-            case 0: // front
+            case FaceDirection.FRONT:
                 faceMesh.position.z = cubeSize / 2;
                 this.faces.front = faceMesh;
                 break;
-            case 1: // back
+            case FaceDirection.BACK:
                 faceMesh.position.z = -cubeSize / 2;
                 faceMesh.rotation.y = Math.PI;
                 this.faces.back = faceMesh;
                 break;
-            case 2: // up
+            case FaceDirection.UP:
                 faceMesh.position.y = cubeSize / 2;
                 faceMesh.rotation.x = -Math.PI / 2;
                 this.faces.up = faceMesh;
                 break;
-            case 3: // down
+            case FaceDirection.DOWN:
                 faceMesh.position.y = -cubeSize / 2;
-                faceMesh.rotation.x = -Math.PI / 2;
+                faceMesh.rotation.x = Math.PI / 2;
                 this.faces.down = faceMesh;
                 break;
-            case 4: // right
+            case FaceDirection.RIGHT:
                 faceMesh.position.x = cubeSize / 2;
                 faceMesh.rotation.y = -Math.PI / 2;
                 this.faces.right = faceMesh;
                 break;
-            case 5: // left
+            case FaceDirection.LEFT:
                 faceMesh.position.x = -cubeSize / 2;
                 faceMesh.rotation.y = Math.PI / 2;
                 this.faces.left = faceMesh;
@@ -100,22 +101,22 @@ class SubCube {
         let colorValue;
 
         switch (index) {
-            case 0: // front
+            case FaceDirection.FRONT:
                 colorValue = this.z === 2 ? faceColors.red : faceColors.default;
                 break;
-            case 1: // back
+            case FaceDirection.BACK:
                 colorValue = this.z === 0 ? faceColors.orange : faceColors.default;
                 break;
-            case 2: // up
+            case FaceDirection.UP:
                 colorValue = this.y === 2 ? faceColors.white : faceColors.default;
                 break;
-            case 3: // down
+            case FaceDirection.DOWN:
                 colorValue = this.y === 0 ? faceColors.yellow : faceColors.default;
                 break;
-            case 4: // right
+            case FaceDirection.RIGHT:
                 colorValue = this.x === 2 ? faceColors.blue : faceColors.default;
                 break;
-            case 5: // left
+            case FaceDirection.LEFT:
                 colorValue = this.x === 0 ? faceColors.green : faceColors.default;
                 break;
             default:
@@ -124,7 +125,7 @@ class SubCube {
         }
 
         return {
-            name: Object.keys(faceColors)[index], // Get the key (property name) based on the index
+            name: Object.keys(faceColors)[index],
             hex: colorValue
         };
     }
