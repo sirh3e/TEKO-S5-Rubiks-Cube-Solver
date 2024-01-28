@@ -148,7 +148,7 @@ class SubCube {
         // Find the specific face mesh using the faceIndex
         const faceMesh = this.objGroup.children.find(mesh => mesh.userData.faceIndex === faceIndex);
 
-        if(faceMesh){
+        if (faceMesh){
             // Get the current and new colors
             const currentFaceColorName = faceMesh.userData.faceColorName;
             const newFaceColor = this.getNextFaceColorByName(currentFaceColorName)
