@@ -7,45 +7,50 @@ class Cube {
     constructor(scene) {
         this.scene = scene;
         this.config = config;
+        this.masterGroup = new THREE.Group();
+
         this.groups = {
-            U: new THREE.Group(),
-            D: new THREE.Group(),
-            L: new THREE.Group(),
-            R: new THREE.Group(),
-            F: new THREE.Group(),
-            B: new THREE.Group()
+            U: [],
+            D: [],
+            L: [],
+            R: [],
+            F: [],
+            B: []
         };
+
+        this.faceMapping = {
+            U: 'up',
+            D: 'down',
+            L: 'left',
+            R: 'right',
+            F: 'front',
+            B: 'back'
+        };
+
         this.init();
     }
 
     init() {
-        // Create sub-cubes and add them to their respective groups
         for (let x = 0; x < 3; x++) {
             for (let y = 0; y < 3; y++) {
                 for (let z = 0; z < 3; z++) {
-
-                    // Skip the invisible center cube
                     if (x === 1 && y === 1 && z === 1) continue;
 
                     const subCube = new SubCube(x, y, z, this.config.faceColors, this.config.cubeSize, this.config.cubeGap);
+                    this.masterGroup.add(subCube.objGroup);
 
-                    // Add subCube to the respective groups
-                    if (y === 2) this.groups.U.add(subCube.objGroup);
-                    if (y === 0) this.groups.D.add(subCube.objGroup);
-                    if (x === 0) this.groups.L.add(subCube.objGroup);
-                    if (x === 2) this.groups.R.add(subCube.objGroup);
-                    if (z === 2) this.groups.F.add(subCube.objGroup);
-                    if (z === 0) this.groups.B.add(subCube.objGroup);
-
-                    this.scene.add(subCube.objGroup);
+                    // Add subCube references to the logical groups
+                    if (x === 0) this.groups.L.push(subCube);
+                    if (x === 2) this.groups.R.push(subCube);
+                    if (y === 0) this.groups.D.push(subCube);
+                    if (y === 2) this.groups.U.push(subCube);
+                    if (z === 0) this.groups.B.push(subCube);
+                    if (z === 2) this.groups.F.push(subCube);
                 }
             }
         }
 
-        // Add the groups to the scene
-        for (let key in this.groups) {
-            this.scene.add(this.groups[key]);
-        }
+        this.scene.add(this.masterGroup);
     }
 
     // Method to get the current state of the Rubik's Cube
@@ -59,8 +64,35 @@ class Cube {
             B: []   // Back face
         };
 
-        // TODO
+        Object.keys(this.groups).forEach(group => {
+            this.groups[group].forEach(subCubeGroup => {
+                if(subCubeGroup.objGroup.userData.subCubeInstance){
+                    const subCube = subCubeGroup.objGroup.userData.subCubeInstance;
+                    const faceColor = subCube.faces[this.faceMapping[group]].userData.faceColorName;
+                    cubeState[group].push(faceColor);
+                }
+            });
+        });
+
         return cubeState;
+    }
+
+    // TODO: Check if this actually works...
+    setCubeState(newState) {
+        Object.keys(this.groups).forEach(group => {
+            this.groups[group].forEach((subCube, index) => {
+                const faceDirection = this.faceMapping[group];
+                const newColorName = newState[group][index];
+                const newColorValue = this.config.faceColors[newColorName];
+
+                if (subCube.faces[faceDirection]) {
+                    // Update the material of the corresponding face
+                    subCube.faces[faceDirection].material.color.set(newColorValue);
+                    // Update the userData with the new color name
+                    subCube.faces[faceDirection].userData.faceColorName = newColorName;
+                }
+            });
+        });
     }
 
 }
