@@ -68,7 +68,7 @@ function setupScene() {
     const renderPass = new RenderPass(scene, camera);
     composer.addPass(renderPass);
 
-    console.log(cube.getCubeState())
+    console.log(cube.getCubeState())  // todo: remove
 }
 
 function animate() {

@@ -129,7 +129,7 @@ class SubCube {
         };
     }
 
-    getNextFaceColorByName(faceColorName){
+    getNextFaceColorByName(faceColorName) {
         // Find the position of the current color inside the faceColors object
         const currentIndex = Object.keys(this.faceColors).indexOf(faceColorName);
         const nextIndex = (currentIndex + 1) % (Object.keys(this.faceColors).length - 1);
@@ -148,7 +148,7 @@ class SubCube {
         // Find the specific face mesh using the faceIndex
         const faceMesh = this.objGroup.children.find(mesh => mesh.userData.faceIndex === faceIndex);
 
-        if(faceMesh){
+        if (faceMesh){
             // Get the current and new colors
             const currentFaceColorName = faceMesh.userData.faceColorName;
             const newFaceColor = this.getNextFaceColorByName(currentFaceColorName)
@@ -166,7 +166,7 @@ class SubCube {
             if (!cubeIsStatic) {
                 // Create a new material with the desired color and make it double-sided
                 // Replace the existing material of the face with the new material
-                faceMesh.material = new THREE.MeshStandardMaterial({color: newFaceColor.hex, side: THREE.DoubleSide});
+                faceMesh.material = new THREE.MeshStandardMaterial({ color: newFaceColor.hex, side: THREE.DoubleSide });
                 faceMesh.userData.faceColorName = newFaceColor.name;
             }
         }
