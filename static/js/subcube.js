@@ -129,7 +129,7 @@ class SubCube {
         };
     }
 
-    getNextFaceColorByName(faceColorName){
+    getNextFaceColorByName(faceColorName) {
         // Find the position of the current color inside the faceColors object
         const currentIndex = Object.keys(this.faceColors).indexOf(faceColorName);
         const nextIndex = (currentIndex + 1) % (Object.keys(this.faceColors).length - 1);
