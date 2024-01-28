@@ -1,16 +1,26 @@
 {
   "debug": true,
 
-  "cubeSize": 0.9,
-  "cubeGap": 0.1,
-  "cubeColor": "0xff0000",
+  "cubeSize": 1.0,
+  "cubeGap": 0.05,
 
-  "backgroundColor": "0xAAAAAA",
+  "cubeColor": "#FFFFFF",
+  "backgroundColor": "#AAAAAA",
 
-  "ambientLightColor": "0x404040",
-  "ambientLightIntensity": 1,
+  "faceColors": {
+    "red": "#FF0000",
+    "green": "#00FF00",
+    "blue": "#0000FF",
+    "orange": "#FFA500",
+    "white": "#FFFFFF",
+    "yellow": "#FFFF00",
+    "default": "#000000"
+  },
 
-  "directionalLightColor": "0xffffff",
+  "ambientLightColor": "#E1E0E0",
+  "ambientLightIntensity": 3,
+
+  "directionalLightColor": "#FFFFFF",
   "directionalLightIntensity": 1,
   "directionalLightPosition": { "x": 0, "y": 1, "z": 1 },
 
