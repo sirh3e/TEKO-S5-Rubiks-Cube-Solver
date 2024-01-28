@@ -166,7 +166,7 @@ class SubCube {
             if (!cubeIsStatic) {
                 // Create a new material with the desired color and make it double-sided
                 // Replace the existing material of the face with the new material
-                faceMesh.material = new THREE.MeshStandardMaterial({color: newFaceColor.hex, side: THREE.DoubleSide});
+                faceMesh.material = new THREE.MeshStandardMaterial({ color: newFaceColor.hex, side: THREE.DoubleSide });
                 faceMesh.userData.faceColorName = newFaceColor.name;
             }
         }
