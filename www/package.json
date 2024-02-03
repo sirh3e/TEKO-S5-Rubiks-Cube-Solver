@@ -7,9 +7,9 @@
     "create-wasm-app": ".bin/create-wasm-app.js"
   },
   "scripts": {
-    "build": "webpack --mode development --config webpack.config.js",
-    "start": "webpack-dev-server",
-    "watch": "webpack --watch"
+    "build": "cross-env NODE_OPTIONS=--openssl-legacy-provider webpack --mode development --config webpack.config.js",
+    "start": "cross-env NODE_OPTIONS=--openssl-legacy-provider webpack-dev-server",
+    "watch": "cross-env NODE_OPTIONS=--openssl-legacy-provider webpack --watch"
   },
   "repository": {
     "type": "git",
@@ -33,6 +33,7 @@
   },
   "devDependencies": {
     "copy-webpack-plugin": "^5.0.0",
+    "cross-env": "^7.0.3",
     "eslint": "^8.56.0",
     "eslint-config-standard": "^17.1.0",
     "eslint-plugin-import": "^2.29.1",
