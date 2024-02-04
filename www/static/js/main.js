@@ -1,18 +1,25 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { initCube, animateCube, onMouseClick } from './controls.js';
 import config from '../config/config.json';
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-const renderer = new THREE.WebGLRenderer();
+const renderer = new THREE.WebGLRenderer({ antialias: true }); // Enable anti-aliasing
+const composer = new EffectComposer(renderer);
 const controls = new OrbitControls(camera, renderer.domElement);
 
 
 function onWindowResize() {
+    // Update the camera's aspect ratio
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
+
+    // Update renderer and composer sizes
     renderer.setSize(window.innerWidth, window.innerHeight);
+    composer.setSize(window.innerWidth, window.innerHeight);
 }
 
 
@@ -46,13 +53,15 @@ function setupCamera() {
 
 // Scene setup
 function setupScene() {
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setClearColor(config.backgroundColor);
+    renderer.setSize(window.innerWidth, window.innerHeight); // Set renderer size
+    renderer.setClearColor(config.backgroundColor); // Set clear color for the renderer
+
     document.body.appendChild(renderer.domElement);
 
     setupLighting();
     setupCamera();
-    initCube(scene, THREE, config);
+
+    let cube = initCube(scene);
 
     if (config.debug) {
         const axesHelper = new THREE.AxesHelper(5);
@@ -60,6 +69,11 @@ function setupScene() {
     }
 
     setupEventListeners();
+
+    const renderPass = new RenderPass(scene, camera);
+    composer.addPass(renderPass);
+
+    console.log(cube.getCubeState())  // todo: remove
 }
 
 
@@ -68,8 +82,10 @@ function animate() {
     animateCube();
     controls.update();
     renderer.render(scene, camera);
-}
 
+    // Render the scene using the composer
+    composer.render();
+}
 
 setupScene();
 animate();
