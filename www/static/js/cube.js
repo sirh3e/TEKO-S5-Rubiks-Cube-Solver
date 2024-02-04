@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import config from '/static/config/config.json';
+import config from '../config/config.json';
 import SubCube from './subcube'
 
 
