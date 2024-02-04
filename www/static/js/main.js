@@ -3,13 +3,14 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { initCube, animateCube, onMouseClick } from './controls.js';
-import config from '/static/config/config.json';
+import config from '../config/config.json';
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 const renderer = new THREE.WebGLRenderer({ antialias: true }); // Enable anti-aliasing
 const composer = new EffectComposer(renderer);
 const controls = new OrbitControls(camera, renderer.domElement);
+
 
 function onWindowResize() {
     // Update the camera's aspect ratio
@@ -21,11 +22,13 @@ function onWindowResize() {
     composer.setSize(window.innerWidth, window.innerHeight);
 }
 
+
 // Event-listener setup
 function setupEventListeners() {
     window.addEventListener('resize', onWindowResize);
     window.addEventListener('click', event => onMouseClick(event, scene, camera, renderer));
 }
+
 
 // Lighting setup
 function setupLighting() {
@@ -37,6 +40,7 @@ function setupLighting() {
     scene.add(directionalLight);
 }
 
+
 // Camera setup
 function setupCamera() {
     camera.position.set(
@@ -45,6 +49,7 @@ function setupCamera() {
         config.cameraPosition.z
     );
 }
+
 
 // Scene setup
 function setupScene() {
@@ -71,10 +76,12 @@ function setupScene() {
     console.log(cube.getCubeState())  // todo: remove
 }
 
+
 function animate() {
     requestAnimationFrame(animate);
     animateCube();
     controls.update();
+    renderer.render(scene, camera);
 
     // Render the scene using the composer
     composer.render();
