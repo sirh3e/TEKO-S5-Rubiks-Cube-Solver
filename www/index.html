@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rubik's Cube</title>
     <link rel="stylesheet" href="static/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 
 <body>
@@ -13,6 +14,14 @@
         This page contains webassembly and javascript content, please enable javascript in your browser.
     </noscript>
 
+    <div>
+        <button id="start" class="controlElement"><i class="fas fa-fast-backward"></i></button>
+        <button id="prev" class="controlElement"><i class="fas fa-step-backward"></i></button>
+        <button id="playPause" class="controlElement"><i class="fas fa-play"></i></button>
+        <button id="next" class="controlElement"><i class="fas fa-step-forward"></i></button>
+        <button id="end" class="controlElement"><i class="fas fa-fast-forward"></i></button>
+        <button id="reset" class="controlElement"><i class="fas fa-rotate-left"></i></button>
+    </div>
     <script type="module" src="static/js/main.js"></script>
 
     <script src="./bootstrap.js"></script>
