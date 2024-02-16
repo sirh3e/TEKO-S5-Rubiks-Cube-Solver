@@ -41,10 +41,16 @@ class SubCube {
             this.objGroup.add(face);
         }
 
+        // positions in the world are offset by one, so that the entire rubik's cube has it center at the origin point
+        // todo: why does the subcube have to deal with this?
+        const worldPosX = this.x -1;
+        const worldPosY = this.y -1;
+        const worldPosZ = this.z -1;
+
         this.objGroup.position.set(
-            this.x - 1 + this.x * cubeGap,
-            this.y - 1 + this.y * cubeGap,
-            this.z - 1 + this.z * cubeGap
+            worldPosX + Math.sign(worldPosX) * cubeGap,
+            worldPosY + Math.sign(worldPosY) * cubeGap,
+            worldPosZ + Math.sign(worldPosZ) * cubeGap
         );
     }
 
