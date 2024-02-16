@@ -9,12 +9,12 @@ class SubCube {
 
         // these are the static cubes (in the middle of each layer) [x, y, z]
         this.staticCubes = [
-            [1,1,2],
-            [2,1,1],
-            [1,1,0],
-            [0,1,1],
-            [1,2,1],
-            [1,0,1],
+            [1, 1, 2],
+            [2, 1, 1],
+            [1, 1, 0],
+            [0, 1, 1],
+            [1, 2, 1],
+            [1, 0, 1],
         ]
 
         this.faces = {
@@ -43,9 +43,9 @@ class SubCube {
 
         // positions in the world are offset by one, so that the entire rubik's cube has it center at the origin point
         // todo: why does the subcube have to deal with this?
-        const worldPosX = this.x -1;
-        const worldPosY = this.y -1;
-        const worldPosZ = this.z -1;
+        const worldPosX = this.x - 1;
+        const worldPosY = this.y - 1;
+        const worldPosZ = this.z - 1;
 
         this.objGroup.position.set(
             worldPosX + Math.sign(worldPosX) * cubeGap,
@@ -155,7 +155,7 @@ class SubCube {
         // Find the specific face mesh using the faceIndex
         const faceMesh = this.objGroup.children.find(mesh => mesh.userData.faceIndex === faceIndex);
 
-        if (faceMesh){
+        if (faceMesh) {
             // Get the current and new colors
             const currentFaceColorName = faceMesh.userData.faceColorName;
             const newFaceColor = this.getNextFaceColorByName(currentFaceColorName)
