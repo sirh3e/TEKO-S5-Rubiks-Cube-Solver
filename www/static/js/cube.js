@@ -67,7 +67,7 @@ class Cube {
 
         Object.keys(this.groups).forEach(group => {
             this.groups[group].forEach(subCubeGroup => {
-                if(subCubeGroup.objGroup.userData.subCubeInstance){
+                if (subCubeGroup.objGroup.userData.subCubeInstance) {
                     const subCube = subCubeGroup.objGroup.userData.subCubeInstance;
                     const faceColor = subCube.faces[this.faceMapping[group]].userData.faceColorName;
                     cubeState[group].push(faceColor);
