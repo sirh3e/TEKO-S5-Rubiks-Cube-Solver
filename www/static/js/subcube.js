@@ -49,6 +49,7 @@ class SubCube {
             this.y + Math.sign(this.y) * cubeGap,
             this.z + Math.sign(this.z) * cubeGap
         );
+
     }
 
     createFace(index, faceColors, cubeSize) {
