@@ -173,11 +173,36 @@ class Cube {
             child.applyMatrix4(this.rotationGroup.matrixWorld);
 
             // then add the object to the scene
-            this.scene.add(child);
+            this.masterGroup.add(child);
         }
 
         // remove the group from the scene
         this.scene.remove(this.rotationGroup);
+
+        // remap logical groups
+        this.remapSubCubesToGroups();
+    }
+
+    remapSubCubesToGroups() {
+        // clear the current groups
+        Object.keys(this.groups).forEach(key => {
+            this.groups[key] = [];
+        });
+
+        // iterate over all subcubes in the masterGroup
+        this.masterGroup.children.forEach(subCube => {
+            const subCubeInstance = subCube.userData.subCubeInstance;
+            const { x, y, z } = subCube.position;
+
+            // add subCube references to the logical groups based on their position
+            // TODO: change the <= and >= once we no longer use the gaps
+            if (x <= -1) this.groups.L.push(subCubeInstance);
+            if (x >= 1) this.groups.R.push(subCubeInstance);
+            if (y <= -1) this.groups.D.push(subCubeInstance);
+            if (y >= 1) this.groups.U.push(subCubeInstance);
+            if (z <= -1) this.groups.B.push(subCubeInstance);
+            if (z >= 1) this.groups.F.push(subCubeInstance);
+        });
     }
 }
 

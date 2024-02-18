@@ -12,8 +12,13 @@ const composer = new EffectComposer(renderer);
 const controls = new OrbitControls(camera, renderer.domElement);
 const cube = initCube(scene);
 
-document.getElementById("next").addEventListener("click", () => { cube.rotateFace("u"); });
-document.getElementById("prev").addEventListener("click", () => { cube.rotateFace("b'"); });
+// todo: assign actual functions once possible
+document.getElementById("start").addEventListener("click", () => { cube.rotateFace("f"); });
+document.getElementById("prev").addEventListener("click", () => { cube.rotateFace("B"); });
+document.getElementById("playPause").addEventListener("click", () => { cube.rotateFace("L"); });
+document.getElementById("next").addEventListener("click", () => { cube.rotateFace("r"); });
+document.getElementById("end").addEventListener("click", () => { cube.rotateFace("d'"); });
+document.getElementById("reset").addEventListener("click", () => { cube.rotateFace("u'"); });
 
 
 function onWindowResize() {
