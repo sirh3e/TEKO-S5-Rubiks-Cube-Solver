@@ -3,10 +3,11 @@ mod moves;
 mod pochmann_solver;
 mod utils;
 
-use crate::pochmann_solver::solve;
+use crate::{
+    cube::{facelet::FaceletCube, sub::SubCube},
+    pochmann_solver::solve,
+};
 use wasm_bindgen::prelude::*;
-use crate::cube::facelet::FaceletCube;
-use crate::cube::sub::SubCube;
 
 #[wasm_bindgen]
 extern "C" {

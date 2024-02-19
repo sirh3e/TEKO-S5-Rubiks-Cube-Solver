@@ -1,12 +1,10 @@
-use std::convert::TryInto;
-use std::fmt;
-use std::str::FromStr;
+use std::{convert::TryInto, fmt, str::FromStr};
 
-use crate::cube::Cube;
-use crate::moves::Move;
-use Colour::*;
-use Facelet::*;
-use crate::cube::sub::SubCube;
+use self::{Colour::*, Facelet::*};
+use crate::{
+    cube::{sub::SubCube, Cube},
+    moves::Move,
+};
 
 /// The Rubik cube on the facelet level; described by positions of the coloured stickers.
 

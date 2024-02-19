@@ -1,14 +1,15 @@
 #![allow(clippy::upper_case_acronyms)]
+use std::{fmt, str::FromStr};
+
 use lazy_static::lazy_static;
 use serde::{Deserialize, Serialize};
 use serde_repr::*;
-use std::fmt;
-use std::str::FromStr;
 
-use crate::cube::Cube;
-use crate::moves::{Direction, Move, Position};
-use Corner::*;
-use Edge::*;
+use self::{Corner::*, Edge::*};
+use crate::{
+    cube::Cube,
+    moves::{Direction, Move, Position},
+};
 /// The Rubik cube on the sub cube level; described by 8 corner sub cube, 12 edge sub cube and the sub cube orientations.
 
 #[derive(Serialize_repr, Deserialize_repr, Debug, Copy, Clone, Hash, Eq, PartialEq)]
