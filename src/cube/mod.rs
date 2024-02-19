@@ -1,4 +1,5 @@
 pub mod facelet;
+pub mod solvers;
 pub mod sub;
 
 use crate::moves::Move;

@@ -1,12 +1,8 @@
 mod cube;
 mod moves;
-mod pochmann_solver;
 mod utils;
 
-use crate::{
-    cube::{facelet::FaceletCube, sub::SubCube},
-    pochmann_solver::solve,
-};
+use crate::cube::{facelet::FaceletCube, solvers::pochmann::solve, sub::SubCube};
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
