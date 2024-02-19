@@ -32,21 +32,21 @@ class Cube {
     }
 
     init() {
-        for (let x = 0; x < 3; x++) {
-            for (let y = 0; y < 3; y++) {
-                for (let z = 0; z < 3; z++) {
-                    if (x === 1 && y === 1 && z === 1) continue;
+        for (let x = -1; x < 2; x++) {
+            for (let y = -1; y < 2; y++) {
+                for (let z = -1; z < 2; z++) {
+                    if (x === 0 && y === 0 && z === 0) continue;
 
                     const subCube = new SubCube(x, y, z, this.config.faceColors, this.config.cubeSize, this.config.cubeGap);
                     this.masterGroup.add(subCube.objGroup);
 
                     // Add subCube references to the logical groups
-                    if (x === 0) this.groups.L.push(subCube);
-                    if (x === 2) this.groups.R.push(subCube);
-                    if (y === 0) this.groups.D.push(subCube);
-                    if (y === 2) this.groups.U.push(subCube);
-                    if (z === 0) this.groups.B.push(subCube);
-                    if (z === 2) this.groups.F.push(subCube);
+                    if (x === -1) this.groups.L.push(subCube);
+                    if (x === 1) this.groups.R.push(subCube);
+                    if (y === -1) this.groups.D.push(subCube);
+                    if (y === 1) this.groups.U.push(subCube);
+                    if (z === -1) this.groups.B.push(subCube);
+                    if (z === 1) this.groups.F.push(subCube);
                 }
             }
         }
@@ -193,6 +193,11 @@ class Cube {
         this.masterGroup.children.forEach(subCube => {
             const subCubeInstance = subCube.userData.subCubeInstance;
             const { x, y, z } = subCube.position;
+
+            // update the logical coordinates
+            subCubeInstance.x = x
+            subCubeInstance.y = y
+            subCubeInstance.z = z
 
             // add subCube references to the logical groups based on their position
             // TODO: change the <= and >= once we no longer use the gaps
