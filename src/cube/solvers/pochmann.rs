@@ -347,8 +347,7 @@ fn simplify_multi_face_moves(solution: &[Move]) -> Vec<Move> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::FaceletCube;
-    use crate::SubCube;
+    use crate::{FaceletCube, SubCube};
 
     #[test]
     fn solve_random_cube() {

@@ -81,12 +81,12 @@ enum Facelet {
 impl fmt::Display for Colour {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match *self {
-            Self::U => write!(f, "W"),
-            Self::R => write!(f, "R"),
-            Self::F => write!(f, "G"),
-            Self::D => write!(f, "Y"),
-            Self::L => write!(f, "O"),
-            Self::B => write!(f, "B"),
+            U => write!(f, "W"),
+            R => write!(f, "R"),
+            F => write!(f, "G"),
+            D => write!(f, "Y"),
+            L => write!(f, "O"),
+            B => write!(f, "B"),
         }
     }
 }
@@ -96,12 +96,12 @@ impl FromStr for Colour {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
-            "W" => Ok(Self::U),
-            "R" => Ok(Self::R),
-            "G" => Ok(Self::F),
-            "Y" => Ok(Self::D),
-            "O" => Ok(Self::L),
-            "B" => Ok(Self::B),
+            "W" => Ok(U),
+            "R" => Ok(R),
+            "G" => Ok(F),
+            "Y" => Ok(D),
+            "O" => Ok(L),
+            "B" => Ok(B),
             _ => Err("Unknown facelet colour"),
         }
     }
@@ -244,9 +244,7 @@ impl From<FaceletCube> for SubCube {
 
             let mut ori = 0;
             for _ in 0..3 {
-                if faces.state[fac[ori] as usize] == Colour::U
-                    || faces.state[fac[ori] as usize] == Colour::D
-                {
+                if faces.state[fac[ori] as usize] == U || faces.state[fac[ori] as usize] == D {
                     break;
                 }
                 ori += 1;
