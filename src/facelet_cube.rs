@@ -336,7 +336,7 @@ mod tests {
     fn applying_half_move_twice_returns_to_initial_state() {
         assert_eq!(
             FaceletCube::default(),
-            FaceletCube::default().apply_moves(&vec![
+            FaceletCube::default().apply_moves(&[
                 Move(Position::Front, Direction::Half),
                 Move(Position::Front, Direction::Half)
             ])
@@ -347,7 +347,7 @@ mod tests {
     fn applying_double_quarter_turn_is_the_same_as_single_half_turn() {
         assert_eq!(
             FaceletCube::default().apply_move(&Move(Position::Front, Direction::Half)),
-            FaceletCube::default().apply_moves(&vec![
+            FaceletCube::default().apply_moves(&[
                 Move(Position::Front, Direction::Normal),
                 Move(Position::Front, Direction::Normal)
             ])
@@ -355,7 +355,7 @@ mod tests {
 
         assert_eq!(
             FaceletCube::default().apply_move(&Move(Position::Front, Direction::Half)),
-            FaceletCube::default().apply_moves(&vec![
+            FaceletCube::default().apply_moves(&[
                 Move(Position::Front, Direction::Prime),
                 Move(Position::Front, Direction::Prime)
             ])

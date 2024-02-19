@@ -380,7 +380,7 @@ mod tests {
         assert_eq!(FaceletCube::default(), cube.apply_moves(&solution));
     }
 
-    fn assert_no_multi_face_turns(solution: &Vec<Move>) {
+    fn assert_no_multi_face_turns(solution: &[Move]) {
         let has_multi_face_turn = solution
             .iter()
             .zip(solution.iter().skip(1))
