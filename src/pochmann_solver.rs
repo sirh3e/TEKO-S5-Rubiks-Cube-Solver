@@ -103,9 +103,11 @@ fn to_phase_id(phase: Phase, cube: CubieCube) -> PochmannCube {
         }
         Phase::Two => {
             let mut r = [0_u32; 40];
+            #[allow(clippy::needless_range_loop)]
             for idx in 0..8 {
                 r[idx] = pc[32 + idx] as u32;
             }
+            #[allow(clippy::needless_range_loop)]
             for idx in 0..12 {
                 r[0] |= (pc[idx] as u32 / 8) << idx;
             }
@@ -113,9 +115,11 @@ fn to_phase_id(phase: Phase, cube: CubieCube) -> PochmannCube {
         }
         Phase::Three => {
             let mut r = [0_u32; 40];
+            #[allow(clippy::needless_range_loop)]
             for idx in 0..12 {
                 r[0] |= (if pc[idx] > 7 { 2 } else { pc[idx] as u32 & 1 }) << (2 * idx);
             }
+            #[allow(clippy::needless_range_loop)]
             for idx in 0..8 {
                 r[1] |= (((pc[idx + 12] as u32) - 12) & 5) << (3 * idx);
             }
@@ -299,7 +303,7 @@ pub(crate) fn solve(cube: &CubieCube) -> Option<Vec<Move>> {
     Some(simplify_multi_face_moves(&solution))
 }
 
-fn simplify_multi_face_moves(solution: &Vec<Move>) -> Vec<Move> {
+fn simplify_multi_face_moves(solution: &[Move]) -> Vec<Move> {
     fn to_quarter_turns(d: Direction) -> u8 {
         match d {
             Normal => 1,

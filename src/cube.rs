@@ -5,7 +5,7 @@ use crate::moves::Move;
 pub(crate) trait Cube: Sized + Default {
     fn apply_move(self, action: &Move) -> Self;
 
-    fn apply_moves(self, actions: &Vec<Move>) -> Self {
+    fn apply_moves(self, actions: &[Move]) -> Self {
         actions
             .iter()
             .fold(self, |cube, action| cube.apply_move(action))

@@ -1,10 +1,9 @@
-mod utils;
 mod cube;
 mod cubie_cube;
 mod facelet_cube;
 mod moves;
 mod pochmann_solver;
-
+mod utils;
 
 use crate::cubie_cube::CubieCube;
 use crate::facelet_cube::FaceletCube;

@@ -80,6 +80,7 @@ impl fmt::Display for Move {
 }
 
 impl Move {
+    #[allow(dead_code)]
     pub(crate) fn available() -> [Self; 18] {
         [
             Move(Up, Normal),

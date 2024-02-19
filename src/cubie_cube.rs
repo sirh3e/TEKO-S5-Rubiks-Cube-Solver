@@ -1,3 +1,4 @@
+#![allow(clippy::upper_case_acronyms)]
 use lazy_static::lazy_static;
 use serde::{Deserialize, Serialize};
 use serde_repr::*;
@@ -8,7 +9,6 @@ use crate::cube::Cube;
 use crate::moves::{Direction, Move, Position};
 use Corner::*;
 use Edge::*;
-
 /// The Rubik cube on the cubie level; described by 8 corner cubies, 12 edge cubies and the cubie orientations.
 
 #[derive(Serialize_repr, Deserialize_repr, Debug, Copy, Clone, Hash, Eq, PartialEq)]
@@ -71,11 +71,11 @@ impl Cube for CubieCube {
                 Position::Front => *MOVE_F,
                 Position::Back => *MOVE_B,
             }),
-            Move(position, Direction::Half) => self.apply_moves(&vec![
+            Move(position, Direction::Half) => self.apply_moves(&[
                 Move(position, Direction::Normal),
                 Move(position, Direction::Normal),
             ]),
-            Move(position, Direction::Prime) => self.apply_moves(&vec![
+            Move(position, Direction::Prime) => self.apply_moves(&[
                 Move(position, Direction::Normal),
                 Move(position, Direction::Normal),
                 Move(position, Direction::Normal),

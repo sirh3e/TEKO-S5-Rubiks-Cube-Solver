@@ -138,14 +138,11 @@ impl Default for FaceletCube {
 
 impl fmt::Display for FaceletCube {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(
-            f,
-            "{}",
-            self.state
-                .iter()
-                .map(|face| format!("{}", face))
-                .collect::<String>()
-        )
+        let text = self.state.iter().fold(String::new(), |mut buffer, face| {
+            buffer.push_str(&format!("{}", face));
+            buffer
+        });
+        write!(f, "{}", text)
     }
 }
 
@@ -243,6 +240,7 @@ impl From<FaceletCube> for CubieCube {
     fn from(faces: FaceletCube) -> Self {
         let mut cube = CubieCube::default();
 
+        #[allow(clippy::needless_range_loop)]
         for i in 0..cube.cp.len() {
             let fac = CORNER_FACELETS[i];
 
@@ -259,6 +257,7 @@ impl From<FaceletCube> for CubieCube {
             let col1 = faces.state[fac[(ori + 1) % 3] as usize];
             let col2 = faces.state[fac[(ori + 2) % 3] as usize];
 
+            #[allow(clippy::needless_range_loop)]
             for j in 0..cube.cp.len() {
                 let col = CORNER_COLOURS[j];
                 if col1 == col[1] && col2 == col[2] {
@@ -269,7 +268,9 @@ impl From<FaceletCube> for CubieCube {
             }
         }
 
+        #[allow(clippy::needless_range_loop)]
         for i in 0..cube.ep.len() {
+            #[allow(clippy::needless_range_loop)]
             for j in 0..cube.ep.len() {
                 if faces.state[EDGE_FACELETS[i][0] as usize] == EDGE_COLOURS[j][0]
                     && faces.state[EDGE_FACELETS[i][1] as usize] == EDGE_COLOURS[j][1]
