@@ -42,7 +42,7 @@ pub(crate) enum Edge {
 }
 
 #[derive(Serialize, Deserialize, Debug, Copy, Clone, Hash, Eq, PartialEq)]
-pub(crate) struct SubCube {
+pub struct SubCube {
     pub(crate) cp: [Corner; 8],
     pub(crate) co: [u8; 8],
     pub(crate) ep: [Edge; 12],

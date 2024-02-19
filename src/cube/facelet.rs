@@ -4,9 +4,9 @@ use std::str::FromStr;
 
 use crate::cube::Cube;
 use crate::moves::Move;
-use crate::sub_cube::SubCube;
 use Colour::*;
 use Facelet::*;
+use crate::cube::sub::SubCube;
 
 /// The Rubik cube on the facelet level; described by positions of the coloured stickers.
 

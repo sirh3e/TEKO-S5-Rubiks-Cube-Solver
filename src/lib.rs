@@ -1,15 +1,12 @@
 mod cube;
-mod facelet_cube;
 mod moves;
 mod pochmann_solver;
-mod sub_cube;
 mod utils;
-
-use crate::facelet_cube::FaceletCube;
-use crate::sub_cube::SubCube;
 
 use crate::pochmann_solver::solve;
 use wasm_bindgen::prelude::*;
+use crate::cube::facelet::FaceletCube;
+use crate::cube::sub::SubCube;
 
 #[wasm_bindgen]
 extern "C" {

@@ -1,12 +1,12 @@
 use std::collections::{HashMap, VecDeque};
 
 use crate::cube::Cube;
+use crate::cube::sub::{*, Corner::*, SubCube};
+use crate::cube::sub::Edge::*;
 use crate::moves::Direction::*;
 use crate::moves::Position::*;
 use crate::moves::{Direction, Move};
-use crate::sub_cube::Corner::*;
-use crate::sub_cube::Edge::*;
-use crate::sub_cube::{Corner, Edge, SubCube};
+
 
 type PochmannCube = [u32; 40];
 
