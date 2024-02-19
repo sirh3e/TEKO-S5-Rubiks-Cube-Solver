@@ -1,12 +1,12 @@
 mod cube;
-mod cubie_cube;
 mod facelet_cube;
 mod moves;
 mod pochmann_solver;
+mod sub_cube;
 mod utils;
 
-use crate::cubie_cube::CubieCube;
 use crate::facelet_cube::FaceletCube;
+use crate::sub_cube::SubCube;
 
 use crate::pochmann_solver::solve;
 use wasm_bindgen::prelude::*;
@@ -23,7 +23,7 @@ pub fn greet() {
 
 #[wasm_bindgen]
 pub fn solve_cube(cube: String) -> Result<js_sys::Array, JsValue> {
-    match solve(&CubieCube::from(cube.parse::<FaceletCube>()?)) {
+    match solve(&SubCube::from(cube.parse::<FaceletCube>()?)) {
         Some(solution) => Ok(solution
             .into_iter()
             .map(|mv| JsValue::from_str(&format!("{}", mv)))

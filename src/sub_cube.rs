@@ -9,7 +9,7 @@ use crate::cube::Cube;
 use crate::moves::{Direction, Move, Position};
 use Corner::*;
 use Edge::*;
-/// The Rubik cube on the cubie level; described by 8 corner cubies, 12 edge cubies and the cubie orientations.
+/// The Rubik cube on the sub cube level; described by 8 corner sub cube, 12 edge sub cube and the sub cube orientations.
 
 #[derive(Serialize_repr, Deserialize_repr, Debug, Copy, Clone, Hash, Eq, PartialEq)]
 #[repr(u8)]
@@ -42,16 +42,16 @@ pub(crate) enum Edge {
 }
 
 #[derive(Serialize, Deserialize, Debug, Copy, Clone, Hash, Eq, PartialEq)]
-pub(crate) struct CubieCube {
+pub(crate) struct SubCube {
     pub(crate) cp: [Corner; 8],
     pub(crate) co: [u8; 8],
     pub(crate) ep: [Edge; 12],
     pub(crate) eo: [u8; 12],
 }
 
-impl Default for CubieCube {
+impl Default for SubCube {
     fn default() -> Self {
-        CubieCube {
+        SubCube {
             cp: [URF, UFL, ULB, UBR, DFR, DLF, DBL, DRB],
             co: [0; 8],
             ep: [UR, UF, UL, UB, DR, DF, DL, DB, FR, FL, BL, BR],
@@ -60,7 +60,7 @@ impl Default for CubieCube {
     }
 }
 
-impl Cube for CubieCube {
+impl Cube for SubCube {
     fn apply_move(self, action: &Move) -> Self {
         match *action {
             Move(position, Direction::Normal) => self.multiply(match position {
@@ -84,7 +84,7 @@ impl Cube for CubieCube {
     }
 }
 
-impl CubieCube {
+impl SubCube {
     fn multiply(&self, other: Self) -> Self {
         let mut new_ep = self.ep;
         let mut new_eo = self.eo;
@@ -132,7 +132,7 @@ impl CubieCube {
             new_co[idx] = ori as u8;
         }
 
-        CubieCube {
+        SubCube {
             cp: new_cp,
             co: new_co,
             ep: new_ep,
@@ -141,55 +141,55 @@ impl CubieCube {
     }
 }
 
-impl fmt::Display for CubieCube {
+impl fmt::Display for SubCube {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{}", serde_json::to_string(self).unwrap())
     }
 }
 
-impl FromStr for CubieCube {
+impl FromStr for SubCube {
     type Err = &'static str;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match serde_json::from_str(s) {
             Ok(cube) => Ok(cube),
-            Err(_) => Err("Invalid cubie cube representation"),
+            Err(_) => Err("Invalid sub cube representation"),
         }
     }
 }
 
 lazy_static! {
-    static ref MOVE_U: CubieCube = CubieCube {
+    static ref MOVE_U: SubCube = SubCube {
         cp: [UBR, URF, UFL, ULB, DFR, DLF, DBL, DRB,],
         co: [0; 8],
         ep: [UB, UR, UF, UL, DR, DF, DL, DB, FR, FL, BL, BR,],
         eo: [0; 12],
     };
-    static ref MOVE_R: CubieCube = CubieCube {
+    static ref MOVE_R: SubCube = SubCube {
         cp: [DFR, UFL, ULB, URF, DRB, DLF, DBL, UBR,],
         co: [2, 0, 0, 1, 1, 0, 0, 2],
         ep: [FR, UF, UL, UB, BR, DF, DL, DB, DR, FL, BL, UR,],
         eo: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     };
-    static ref MOVE_F: CubieCube = CubieCube {
+    static ref MOVE_F: SubCube = SubCube {
         cp: [UFL, DLF, ULB, UBR, URF, DFR, DBL, DRB,],
         co: [1, 2, 0, 0, 2, 1, 0, 0],
         ep: [UR, FL, UL, UB, DR, FR, DL, DB, UF, DF, BL, BR,],
         eo: [0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0],
     };
-    static ref MOVE_D: CubieCube = CubieCube {
+    static ref MOVE_D: SubCube = SubCube {
         cp: [URF, UFL, ULB, UBR, DLF, DBL, DRB, DFR,],
         co: [0; 8],
         ep: [UR, UF, UL, UB, DF, DL, DB, DR, FR, FL, BL, BR,],
         eo: [0; 12],
     };
-    static ref MOVE_L: CubieCube = CubieCube {
+    static ref MOVE_L: SubCube = SubCube {
         cp: [URF, ULB, DBL, UBR, DFR, UFL, DLF, DRB,],
         co: [0, 1, 2, 0, 0, 2, 1, 0],
         ep: [UR, UF, BL, UB, DR, DF, FL, DB, FR, UL, DL, BR,],
         eo: [0; 12],
     };
-    static ref MOVE_B: CubieCube = CubieCube {
+    static ref MOVE_B: SubCube = SubCube {
         cp: [URF, UFL, UBR, DRB, DFR, DLF, ULB, DBL,],
         co: [0, 0, 1, 2, 0, 0, 2, 1],
         ep: [UR, UF, UL, BR, DR, DF, DL, BL, FR, FL, UB, DB,],
@@ -202,19 +202,19 @@ mod tests {
     use super::*;
     use crate::moves::{Direction, Position};
 
-    macro_rules! cubie_cube_move_tests {
+    macro_rules! sub_cube_move_tests {
         ($($name:ident: $value:expr,)*) => {
         $(
             #[test]
             fn $name() {
                 let (input, expected) = $value;
-                assert_eq!(expected, CubieCube::default().apply_move(&input).to_string());
+                assert_eq!(expected, SubCube::default().apply_move(&input).to_string());
             }
         )*
         }
     }
 
-    cubie_cube_move_tests! {
+    sub_cube_move_tests! {
         up: (Move(Position::Up, Direction::Normal), "{\"cp\":[3,0,1,2,4,5,6,7],\"co\":[0,0,0,0,0,0,0,0],\"ep\":[3,0,1,2,4,5,6,7,8,9,10,11],\"eo\":[0,0,0,0,0,0,0,0,0,0,0,0]}"),
         up_prime: (Move(Position::Up, Direction::Prime), "{\"cp\":[1,2,3,0,4,5,6,7],\"co\":[0,0,0,0,0,0,0,0],\"ep\":[1,2,3,0,4,5,6,7,8,9,10,11],\"eo\":[0,0,0,0,0,0,0,0,0,0,0,0]}"),
         up_half: (Move(Position::Up, Direction::Half), "{\"cp\":[2,3,0,1,4,5,6,7],\"co\":[0,0,0,0,0,0,0,0],\"ep\":[2,3,0,1,4,5,6,7,8,9,10,11],\"eo\":[0,0,0,0,0,0,0,0,0,0,0,0]}"),
@@ -238,8 +238,8 @@ mod tests {
     #[test]
     fn applying_half_move_twice_returns_to_initial_state() {
         assert_eq!(
-            CubieCube::default(),
-            CubieCube::default().apply_moves(&[
+            SubCube::default(),
+            SubCube::default().apply_moves(&[
                 Move(Position::Front, Direction::Half),
                 Move(Position::Front, Direction::Half)
             ])
@@ -249,16 +249,16 @@ mod tests {
     #[test]
     fn applying_double_quarter_turn_is_the_same_as_single_half_turn() {
         assert_eq!(
-            CubieCube::default().apply_move(&Move(Position::Front, Direction::Half)),
-            CubieCube::default().apply_moves(&[
+            SubCube::default().apply_move(&Move(Position::Front, Direction::Half)),
+            SubCube::default().apply_moves(&[
                 Move(Position::Front, Direction::Normal),
                 Move(Position::Front, Direction::Normal)
             ])
         );
 
         assert_eq!(
-            CubieCube::default().apply_move(&Move(Position::Front, Direction::Half)),
-            CubieCube::default().apply_moves(&[
+            SubCube::default().apply_move(&Move(Position::Front, Direction::Half)),
+            SubCube::default().apply_moves(&[
                 Move(Position::Front, Direction::Prime),
                 Move(Position::Front, Direction::Prime)
             ])

@@ -3,8 +3,8 @@ use std::fmt;
 use std::str::FromStr;
 
 use crate::cube::Cube;
-use crate::cubie_cube::CubieCube;
 use crate::moves::Move;
+use crate::sub_cube::SubCube;
 use Colour::*;
 use Facelet::*;
 
@@ -116,7 +116,7 @@ pub(crate) struct FaceletCube {
 
 impl Cube for FaceletCube {
     fn apply_move(self, action: &Move) -> Self {
-        FaceletCube::from(CubieCube::from(self).apply_move(action))
+        FaceletCube::from(SubCube::from(self).apply_move(action))
     }
 }
 
@@ -214,8 +214,8 @@ static EDGE_COLOURS: [[Colour; 2]; 12] = [
     [B, R],
 ];
 
-impl From<CubieCube> for FaceletCube {
-    fn from(cube: CubieCube) -> Self {
+impl From<SubCube> for FaceletCube {
+    fn from(cube: SubCube) -> Self {
         let mut faces = FaceletCube::default();
 
         for i in 0..cube.co.len() {
@@ -236,9 +236,9 @@ impl From<CubieCube> for FaceletCube {
     }
 }
 
-impl From<FaceletCube> for CubieCube {
+impl From<FaceletCube> for SubCube {
     fn from(faces: FaceletCube) -> Self {
-        let mut cube = CubieCube::default();
+        let mut cube = SubCube::default();
 
         #[allow(clippy::needless_range_loop)]
         for i in 0..cube.cp.len() {

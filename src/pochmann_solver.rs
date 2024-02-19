@@ -1,12 +1,12 @@
 use std::collections::{HashMap, VecDeque};
 
 use crate::cube::Cube;
-use crate::cubie_cube::Corner::*;
-use crate::cubie_cube::Edge::*;
-use crate::cubie_cube::{Corner, CubieCube, Edge};
 use crate::moves::Direction::*;
 use crate::moves::Position::*;
 use crate::moves::{Direction, Move};
+use crate::sub_cube::Corner::*;
+use crate::sub_cube::Edge::*;
+use crate::sub_cube::{Corner, Edge, SubCube};
 
 type PochmannCube = [u32; 40];
 
@@ -40,7 +40,7 @@ fn to_pochmann_corner(c: Corner) -> u32 {
     }
 }
 
-fn to_pochmann_cube(cube: CubieCube) -> PochmannCube {
+fn to_pochmann_cube(cube: SubCube) -> PochmannCube {
     let mut pc = [0_u32; 40];
 
     pc[0] = to_pochmann_edge(cube.ep[UF as usize]);
@@ -90,7 +90,7 @@ fn to_pochmann_cube(cube: CubieCube) -> PochmannCube {
     pc
 }
 
-fn to_phase_id(phase: Phase, cube: CubieCube) -> PochmannCube {
+fn to_phase_id(phase: Phase, cube: SubCube) -> PochmannCube {
     let pc = to_pochmann_cube(cube);
 
     match phase {
@@ -247,22 +247,22 @@ fn get_permitted_moves(phase: Phase) -> Vec<Move> {
     }
 }
 
-fn bidirection_bfs(phase: Phase, current_cube: CubieCube) -> Vec<Move> {
+fn bidirection_bfs(phase: Phase, current_cube: SubCube) -> Vec<Move> {
     let current_id = to_phase_id(phase, current_cube);
-    let goal_id = to_phase_id(phase, CubieCube::default());
+    let goal_id = to_phase_id(phase, SubCube::default());
 
     if current_id == goal_id {
         return vec![];
     };
 
     let mut history: HashMap<(PochmannCube, QueueDirection), Vec<Move>> = HashMap::new();
-    let mut queue: VecDeque<(CubieCube, QueueDirection)> = VecDeque::new();
+    let mut queue: VecDeque<(SubCube, QueueDirection)> = VecDeque::new();
 
     history.insert((current_id, QueueDirection::Forward), vec![]);
     history.insert((goal_id, QueueDirection::Backward), vec![]);
 
     queue.push_back((current_cube, QueueDirection::Forward));
-    queue.push_back((CubieCube::default(), QueueDirection::Backward));
+    queue.push_back((SubCube::default(), QueueDirection::Backward));
 
     while let Some((state, direction)) = queue.pop_front() {
         for action in get_permitted_moves(phase) {
@@ -292,7 +292,7 @@ fn bidirection_bfs(phase: Phase, current_cube: CubieCube) -> Vec<Move> {
     vec![]
 }
 
-pub(crate) fn solve(cube: &CubieCube) -> Option<Vec<Move>> {
+pub(crate) fn solve(cube: &SubCube) -> Option<Vec<Move>> {
     let mut solution = vec![];
 
     for phase in Phase::iterator() {
@@ -343,14 +343,14 @@ fn simplify_multi_face_moves(solution: &[Move]) -> Vec<Move> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::CubieCube;
     use crate::FaceletCube;
+    use crate::SubCube;
 
     #[test]
     fn solve_random_cube() {
-        let cube = CubieCube::random(100);
+        let cube = SubCube::random(100);
         let solution = solve(&cube);
-        assert_eq!(CubieCube::default(), cube.apply_moves(&solution.unwrap()));
+        assert_eq!(SubCube::default(), cube.apply_moves(&solution.unwrap()));
     }
 
     #[test]
@@ -358,7 +358,7 @@ mod tests {
         let cube = "OGOYWWWWYRBYRRRORRORBYGGWOBBWYBYYRWWWBBGOOGORGOGBBYGGY"
             .parse::<FaceletCube>()
             .unwrap();
-        let solution = solve(&CubieCube::from(cube)).unwrap();
+        let solution = solve(&SubCube::from(cube)).unwrap();
 
         assert_no_multi_face_turns(&solution);
         assert_eq!(FaceletCube::default(), cube.apply_moves(&solution));
@@ -366,7 +366,7 @@ mod tests {
         let cube = "BGYRWOYGOWYOWRRYYBOWGBGRBORYWGGYBRBWWYGBORWYRBOOGBORWG"
             .parse::<FaceletCube>()
             .unwrap();
-        let solution = solve(&CubieCube::from(cube)).unwrap();
+        let solution = solve(&SubCube::from(cube)).unwrap();
 
         assert_no_multi_face_turns(&solution);
         assert_eq!(FaceletCube::default(), cube.apply_moves(&solution));
@@ -374,7 +374,7 @@ mod tests {
         let cube = "BRGOWGWWBOOYRRBOGROOYOGYGRGYWWBYYRBBYBBGOYWWORGRYBWWRG"
             .parse::<FaceletCube>()
             .unwrap();
-        let solution = solve(&CubieCube::from(cube)).unwrap();
+        let solution = solve(&SubCube::from(cube)).unwrap();
 
         assert_no_multi_face_turns(&solution);
         assert_eq!(FaceletCube::default(), cube.apply_moves(&solution));
