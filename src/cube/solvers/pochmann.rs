@@ -1,12 +1,16 @@
 use std::collections::{HashMap, VecDeque};
 
-use crate::cube::Cube;
-use crate::moves::Direction::*;
-use crate::moves::Position::*;
-use crate::moves::{Direction, Move};
-use crate::sub_cube::Corner::*;
-use crate::sub_cube::Edge::*;
-use crate::sub_cube::{Corner, Edge, SubCube};
+use crate::{
+    cube::{
+        sub::{Corner::*, Edge::*, SubCube, *},
+        Cube,
+    },
+    moves::{
+        Direction::{self, *},
+        Move,
+        Position::*,
+    },
+};
 
 type PochmannCube = [u32; 40];
 
@@ -343,8 +347,7 @@ fn simplify_multi_face_moves(solution: &[Move]) -> Vec<Move> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::FaceletCube;
-    use crate::SubCube;
+    use crate::{FaceletCube, SubCube};
 
     #[test]
     fn solve_random_cube() {

@@ -1,6 +1,9 @@
-use rand::prelude::SliceRandom;
+pub mod facelet;
+pub mod solvers;
+pub mod sub;
 
 use crate::moves::Move;
+use rand::prelude::SliceRandom;
 
 pub(crate) trait Cube: Sized + Default {
     fn apply_move(self, action: &Move) -> Self;
