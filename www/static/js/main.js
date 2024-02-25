@@ -10,6 +10,10 @@ const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerH
 const renderer = new THREE.WebGLRenderer({ antialias: true }); // Enable anti-aliasing
 const composer = new EffectComposer(renderer);
 const controls = new OrbitControls(camera, renderer.domElement);
+const cube = initCube(scene);
+
+document.getElementById("next").addEventListener("click", () => { cube.rotateFace("u"); });
+document.getElementById("prev").addEventListener("click", () => { cube.rotateFace("b'"); });
 
 
 function onWindowResize() {
@@ -61,8 +65,6 @@ function setupScene() {
     setupLighting();
     setupCamera();
 
-    let cube = initCube(scene);
-
     if (config.debug) {
         const axesHelper = new THREE.AxesHelper(5);
         scene.add(axesHelper);
@@ -72,8 +74,6 @@ function setupScene() {
 
     const renderPass = new RenderPass(scene, camera);
     composer.addPass(renderPass);
-
-    console.log(cube.getCubeState())  // todo: remove
 }
 
 

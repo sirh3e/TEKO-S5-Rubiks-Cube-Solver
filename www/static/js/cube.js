@@ -8,6 +8,7 @@ class Cube {
         this.scene = scene;
         this.config = config;
         this.masterGroup = new THREE.Group();
+        this.rotationGroup = new THREE.Group();
 
         this.groups = {
             U: [],
@@ -95,6 +96,89 @@ class Cube {
         });
     }
 
+    rotateFace(moveCommand) {
+        // reset rotation of group
+        this.rotationGroup.rotation.set(0, 0, 0);
+
+        // (re-)add the empty group to the scene
+        this.scene.add(this.rotationGroup);
+
+        // add sub cubes of face to a group
+        const face = moveCommand[0].toUpperCase();  // face is the first letter of a command
+
+        try {
+            for (const subCube of this.groups[face]) {
+                this.rotationGroup.add(subCube.objGroup);
+            }
+        } catch {
+            console.error(`There is no face '${face}'!`);
+            return;
+        }
+
+        // rotate the group
+        switch (moveCommand.toUpperCase()) {
+            case "U":
+            case "D'":
+                this.rotationGroup.rotation.y -= Math.PI / 2;
+                break;
+            case "U'":
+            case "D":
+                this.rotationGroup.rotation.y += Math.PI / 2;
+                break;
+            case "U2":
+                this.rotationGroup.rotation.y -= Math.PI;
+                break;
+            case "D2":
+                this.rotationGroup.rotation.y += Math.PI;
+                break;
+            case "L'":
+            case "R":
+                this.rotationGroup.rotation.x -= Math.PI / 2;
+                break;
+            case "L":
+            case "R'":
+                this.rotationGroup.rotation.x += Math.PI / 2;
+                break;
+            case "L2":
+            case "R2":
+                this.rotationGroup.rotation.x -= Math.PI;
+                break;
+            case "F":
+            case "B'":
+                this.rotationGroup.rotation.z -= Math.PI / 2;
+                break;
+            case "F'":
+            case "B":
+                this.rotationGroup.rotation.z += Math.PI / 2;
+                break;
+            case "F2":
+                this.rotationGroup.rotation.z -= Math.PI;
+                break;
+            case "B2":
+                this.rotationGroup.rotation.z += Math.PI;
+                break;
+            default:
+                console.error(`There is no move command '${moveCommand}'!`);
+                return;
+        }
+
+        // update the world matrix of the group after rotating
+        this.rotationGroup.updateMatrixWorld();
+
+        // dissolve the group
+        while (this.rotationGroup.children.length > 0) {
+            const child = this.rotationGroup.children[0]
+
+            // apply the group's matrix to the object's matrix to retain their rotated positions relative to the group
+            child.applyMatrix4(this.rotationGroup.matrixWorld);
+
+            // then add the object to the scene
+            this.scene.add(child);
+        }
+
+        // remove the group from the scene
+        this.scene.remove(this.rotationGroup);
+    }
 }
 
 export default Cube;
