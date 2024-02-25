@@ -1,8 +1,8 @@
 import * as THREE from 'three';
 import config from '../config/config.json';
-import cubeStateMapping from '../config/cubeStateMapping.json';
 import SubCube from './subcube'
 import SubBall from "./subBall";
+import gsap from 'gsap';
 
 
 class Cube {
@@ -120,74 +120,65 @@ class Cube {
             return;
         }
 
-        // rotate the group
+        // Determine the axis and angle for rotation
+        let axis = 'y', angle = Math.PI / 2; // Default values
         switch (moveCommand.toUpperCase()) {
             case "U":
             case "D'":
-                this.rotationGroup.rotation.y -= Math.PI / 2;
+                axis = 'y';
+                angle = -Math.PI / 2;
                 break;
             case "U'":
             case "D":
-                this.rotationGroup.rotation.y += Math.PI / 2;
-                break;
-            case "U2":
-                this.rotationGroup.rotation.y -= Math.PI;
-                break;
-            case "D2":
-                this.rotationGroup.rotation.y += Math.PI;
+                axis = 'y';
+                angle = Math.PI / 2;
                 break;
             case "L'":
             case "R":
-                this.rotationGroup.rotation.x -= Math.PI / 2;
+                axis = 'x';
+                angle = -Math.PI / 2;
                 break;
             case "L":
             case "R'":
-                this.rotationGroup.rotation.x += Math.PI / 2;
-                break;
-            case "L2":
-            case "R2":
-                this.rotationGroup.rotation.x -= Math.PI;
+                axis = 'x';
+                angle = Math.PI / 2;
                 break;
             case "F":
             case "B'":
-                this.rotationGroup.rotation.z -= Math.PI / 2;
+                axis = 'z';
+                angle = -Math.PI / 2;
                 break;
             case "F'":
             case "B":
-                this.rotationGroup.rotation.z += Math.PI / 2;
+                axis = 'z';
+                angle = Math.PI / 2;
                 break;
-            case "F2":
-                this.rotationGroup.rotation.z -= Math.PI;
-                break;
-            case "B2":
-                this.rotationGroup.rotation.z += Math.PI;
-                break;
-            default:
-                console.error(`There is no move command '${moveCommand}'!`);
-                return;
+            // Handle double turns as needed
         }
 
-        // update the world matrix of the group after rotating
-        this.rotationGroup.updateMatrixWorld();
+        // Perform the rotation using GSAP 3 for smooth animation
+        gsap.to(this.rotationGroup.rotation, {
+            duration: 0.3,
+            [axis]: `+=${angle}`,
+            onComplete: () => {
+                // Update the world matrix of the group after rotating
+                this.rotationGroup.updateMatrixWorld();
 
-        // dissolve the group
-        while (this.rotationGroup.children.length > 0) {
-            const child = this.rotationGroup.children[0]
+                // Dissolve the group
+                while (this.rotationGroup.children.length > 0) {
+                    const child = this.rotationGroup.children[0];
+                    child.applyMatrix4(this.rotationGroup.matrixWorld);
+                    this.masterGroup.add(child);
+                    this.rotationGroup.remove(child);
+                }
 
-            child.userData.subCubeInstance.updateFaceColors();
+                // Remove the group from the scene
+                this.scene.remove(this.rotationGroup);
 
-            // apply the group's matrix to the object's matrix to retain their rotated positions relative to the group
-            child.applyMatrix4(this.rotationGroup.matrixWorld);
-
-            // then add the object to the scene
-            this.masterGroup.add(child);
-        }
-
-        // remove the group from the scene
-        this.scene.remove(this.rotationGroup);
-
-        // remap logical groups
-        this.remapSubCubesToGroups();
+                // Remap logical groups
+                this.remapSubCubesToGroups();
+            }
+        });
     }
 
     remapSubCubesToGroups() {
@@ -216,8 +207,6 @@ class Cube {
             if (z >= 1) this.groups.F.push(subCubeInstance);
         });
     }
-
-
 }
 
 export default Cube;

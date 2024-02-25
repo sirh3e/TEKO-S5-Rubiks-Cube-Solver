@@ -28,6 +28,7 @@
   },
   "homepage": "https://github.com/rustwasm/create-wasm-app#readme",
   "dependencies": {
+    "gsap": "^3.12.5",
     "three": "^0.160.0",
     "wasm-rubiks-cube-solver": "file:../pkg"
   },
