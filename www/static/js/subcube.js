@@ -9,12 +9,12 @@ class SubCube {
 
         // these are the static cubes (in the middle of each layer) [x, y, z]
         this.staticCubes = [
-            [1,1,2],
-            [2,1,1],
-            [1,1,0],
-            [0,1,1],
-            [1,2,1],
-            [1,0,1],
+            [0, 0, 1],
+            [1, 0, 0],
+            [0, 0, -1],
+            [-1, 0, 0],
+            [0, 1, 0],
+            [0, -1, 0],
         ]
 
         this.faces = {
@@ -42,9 +42,9 @@ class SubCube {
         }
 
         this.objGroup.position.set(
-            this.x - 1 + this.x * cubeGap,
-            this.y - 1 + this.y * cubeGap,
-            this.z - 1 + this.z * cubeGap
+            this.x + Math.sign(this.x) * cubeGap,
+            this.y + Math.sign(this.y) * cubeGap,
+            this.z + Math.sign(this.z) * cubeGap
         );
     }
 
@@ -102,22 +102,22 @@ class SubCube {
 
         switch (index) {
             case FaceDirection.FRONT:
-                colorValue = this.z === 2 ? faceColors.red : faceColors.default;
+                colorValue = this.z === 1 ? faceColors.red : faceColors.default;
                 break;
             case FaceDirection.BACK:
-                colorValue = this.z === 0 ? faceColors.orange : faceColors.default;
+                colorValue = this.z === -1 ? faceColors.orange : faceColors.default;
                 break;
             case FaceDirection.UP:
-                colorValue = this.y === 2 ? faceColors.white : faceColors.default;
+                colorValue = this.y === 1 ? faceColors.white : faceColors.default;
                 break;
             case FaceDirection.DOWN:
-                colorValue = this.y === 0 ? faceColors.yellow : faceColors.default;
+                colorValue = this.y === -1 ? faceColors.yellow : faceColors.default;
                 break;
             case FaceDirection.RIGHT:
-                colorValue = this.x === 2 ? faceColors.blue : faceColors.default;
+                colorValue = this.x === 1 ? faceColors.blue : faceColors.default;
                 break;
             case FaceDirection.LEFT:
-                colorValue = this.x === 0 ? faceColors.green : faceColors.default;
+                colorValue = this.x === -1 ? faceColors.green : faceColors.default;
                 break;
             default:
                 colorValue = faceColors.default;
@@ -149,7 +149,7 @@ class SubCube {
         // Find the specific face mesh using the faceIndex
         const faceMesh = this.objGroup.children.find(mesh => mesh.userData.faceIndex === faceIndex);
 
-        if (faceMesh){
+        if (faceMesh) {
             // Get the current and new colors
             const currentFaceColorName = faceMesh.userData.faceColorName;
             const newFaceColor = this.getNextFaceColorByName(currentFaceColorName)
