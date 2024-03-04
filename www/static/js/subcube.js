@@ -1,11 +1,14 @@
 import * as THREE from 'three';
+import config from '../config/config.json';
 import { FaceDirection } from './face.js'
 
 class SubCube {
-    constructor(x, y, z, faceColors, cubeSize, cubeGap) {
+    constructor(x, y, z, faceColors, cubeSize, cubeGap, scene) {
         this.objGroup = new THREE.Group();
         this.objGroup.userData.isSubCube = true;
         this.objGroup.userData.subCubeInstance = this;
+
+        this.scene = scene;
 
         // these are the static cubes (in the middle of each layer) [x, y, z]
         this.staticCubes = [
@@ -51,16 +54,13 @@ class SubCube {
     createFace(index, faceColors, cubeSize) {
         const color = this.getFaceColor(index, faceColors)
         const faceGeometry = new THREE.PlaneGeometry(cubeSize, cubeSize);
-        const faceMaterial = new THREE.MeshStandardMaterial({
-            color: color.hex,
-            side: THREE.DoubleSide
-        });
+        const faceMaterial = new THREE.MeshStandardMaterial({ color: color.hex });
 
         const faceMesh = new THREE.Mesh(faceGeometry, faceMaterial);
-
         faceMesh.userData.faceColorName = color.name;
         faceMesh.userData.faceIndex = index;
         faceMesh.userData.parentSubCube = this;
+        faceMesh.userData.position = null;
 
         switch (index) {
             case FaceDirection.FRONT:
@@ -69,7 +69,7 @@ class SubCube {
                 break;
             case FaceDirection.BACK:
                 faceMesh.position.z = -cubeSize / 2;
-                faceMesh.rotation.y = Math.PI;
+                faceMesh.rotation.y = -Math.PI;
                 this.faces.back = faceMesh;
                 break;
             case FaceDirection.UP:
@@ -84,12 +84,12 @@ class SubCube {
                 break;
             case FaceDirection.RIGHT:
                 faceMesh.position.x = cubeSize / 2;
-                faceMesh.rotation.y = -Math.PI / 2;
+                faceMesh.rotation.y = Math.PI / 2;
                 this.faces.right = faceMesh;
                 break;
             case FaceDirection.LEFT:
                 faceMesh.position.x = -cubeSize / 2;
-                faceMesh.rotation.y = Math.PI / 2;
+                faceMesh.rotation.y = -Math.PI / 2;
                 this.faces.left = faceMesh;
                 break;
         }
@@ -102,10 +102,10 @@ class SubCube {
 
         switch (index) {
             case FaceDirection.FRONT:
-                colorValue = this.z === 1 ? faceColors.red : faceColors.default;
+                colorValue = this.z === 1 ? faceColors.green : faceColors.default;
                 break;
             case FaceDirection.BACK:
-                colorValue = this.z === -1 ? faceColors.orange : faceColors.default;
+                colorValue = this.z === -1 ? faceColors.blue : faceColors.default;
                 break;
             case FaceDirection.UP:
                 colorValue = this.y === 1 ? faceColors.white : faceColors.default;
@@ -114,18 +114,15 @@ class SubCube {
                 colorValue = this.y === -1 ? faceColors.yellow : faceColors.default;
                 break;
             case FaceDirection.RIGHT:
-                colorValue = this.x === 1 ? faceColors.blue : faceColors.default;
+                colorValue = this.x === 1 ? faceColors.red : faceColors.default;
                 break;
             case FaceDirection.LEFT:
-                colorValue = this.x === -1 ? faceColors.green : faceColors.default;
-                break;
-            default:
-                colorValue = faceColors.default;
+                colorValue = this.x === -1 ? faceColors.orange : faceColors.default;
                 break;
         }
 
         return {
-            name: Object.keys(faceColors)[index],
+            name: Object.keys(faceColors).find(key => faceColors[key] === colorValue),
             hex: colorValue
         };
     }
@@ -156,9 +153,9 @@ class SubCube {
 
             // Get the coordinates of the cube
             const cubeCoordinates = JSON.stringify([
-                faceMesh.parent.userData.subCubeInstance.x,
-                faceMesh.parent.userData.subCubeInstance.y,
-                faceMesh.parent.userData.subCubeInstance.z
+                this.x,
+                this.y,
+                this.z
             ]);
 
             // Check if cube is static (middle of each layer)
@@ -167,12 +164,74 @@ class SubCube {
             if (!cubeIsStatic) {
                 // Create a new material with the desired color and make it double-sided
                 // Replace the existing material of the face with the new material
-                faceMesh.material = new THREE.MeshStandardMaterial({ color: newFaceColor.hex, side: THREE.DoubleSide });
+                faceMesh.material = new THREE.MeshStandardMaterial({ color: newFaceColor.hex });
                 faceMesh.userData.faceColorName = newFaceColor.name;
+            }
+            else {
+                console.log("Cannot change center cube!");
             }
         }
     }
 
+    updateFaceColors() {
+        for (const mesh of this.objGroup.children) {
+            mesh.updateMatrixWorld();
+
+            const worldQuaternion = new THREE.Quaternion();
+            mesh.matrixWorld.decompose(new THREE.Vector3(), worldQuaternion, new THREE.Vector3());
+            const worldRotation = new THREE.Euler().setFromQuaternion(worldQuaternion);
+
+            let meshNormal = new THREE.Vector3(0, 0, 1);
+            let meshNormalInvert = new THREE.Vector3(0, 0, -1);
+
+            meshNormal.applyEuler(worldRotation);
+            meshNormalInvert.applyEuler(worldRotation);
+
+            const meshOrigin = new THREE.Vector3();
+            mesh.getWorldPosition(meshOrigin);
+
+            const raycaster = new THREE.Raycaster(meshOrigin, meshNormal);
+            const skyboxes = this.scene.children.filter(param => param.name === 'skybox');
+            const intersects = raycaster.intersectObjects(skyboxes, true);
+
+            if (intersects.length > 0) {
+                for (const intersect of intersects) {
+                    const name = intersect.object.userData.name.toLowerCase();
+
+                    this.faces[name] = mesh;
+                    mesh.userData.side = name
+                }
+            } else {
+                console.log('No intersections found.');
+            }
+
+            const raycasterSubBall = new THREE.Raycaster(meshOrigin, meshNormalInvert);
+            const subballs = this.scene.children.filter(param => param.name === 'subball');
+            const intersectsSubBall = raycasterSubBall.intersectObjects(subballs, true);
+
+            if (intersectsSubBall.length > 0) {
+                const name = intersectsSubBall[0].object.userData.name  // ball inside cube will be hit first
+                mesh.userData.position = name;
+            } else {
+                console.log('No intersections with subballs found.');
+            }
+
+            if (config.debug) {
+                const arrowHelperInverted = new THREE.ArrowHelper(meshNormalInvert, meshOrigin, 5, 'purple');
+                this.scene.add(arrowHelperInverted);
+
+                if (mesh.userData.faceColorName == 'default') {
+                    // Visualize the normal with an ArrowHelper
+                    const arrowHelper = new THREE.ArrowHelper(meshNormal, meshOrigin, 5, 'black');
+                    this.scene.add(arrowHelper);
+                } else {
+                    const arrowHelper = new THREE.ArrowHelper(meshNormal, meshOrigin, 5, mesh.userData.faceColorName);
+                    this.scene.add(arrowHelper);
+                }
+            }
+
+        }
+    }
 }
 
 export default SubCube;

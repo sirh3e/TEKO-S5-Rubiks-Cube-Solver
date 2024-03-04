@@ -1,6 +1,8 @@
 import * as THREE from 'three';
 import config from '../config/config.json';
+import cubeStateMapping from '../config/cubeStateMapping.json';
 import SubCube from './subcube'
+import SubBall from "./subBall";
 
 
 class Cube {
@@ -37,10 +39,22 @@ class Cube {
                 for (let z = -1; z < 2; z++) {
                     if (x === 0 && y === 0 && z === 0) continue;
 
-                    const subCube = new SubCube(x, y, z, this.config.faceColors, this.config.cubeSize, this.config.cubeGap);
+                    const subBall = new SubBall(x, y, z, this.config.cubeSize);
+                    this.scene.add(subBall.object);
+                }
+            }
+        }
+
+        for (let x = -1; x < 2; x++) {
+            for (let y = -1; y < 2; y++) {
+                for (let z = -1; z < 2; z++) {
+                    if (x === 0 && y === 0 && z === 0) continue;
+
+                    const subCube = new SubCube(x, y, z, this.config.faceColors, this.config.cubeSize, this.config.cubeGap, this.scene);
+
                     this.masterGroup.add(subCube.objGroup);
 
-                    // Add subCube references to the logical groups
+                    // Add subCube references and vectors to the logical (shadow-) groups
                     if (x === -1) this.groups.L.push(subCube);
                     if (x === 1) this.groups.R.push(subCube);
                     if (y === -1) this.groups.D.push(subCube);
@@ -56,44 +70,35 @@ class Cube {
 
     // Method to get the current state of the Rubik's Cube
     getCubeState() {
-        const cubeState = {
-            U: [],  // Up face
-            D: [],  // Down face
-            L: [],  // Left face
-            R: [],  // Right face
-            F: [],  // Front face
-            B: []   // Back face
-        };
+        let cubeState = new Array(54);
 
-        Object.keys(this.groups).forEach(group => {
-            this.groups[group].forEach(subCubeGroup => {
-                if (subCubeGroup.objGroup.userData.subCubeInstance) {
-                    const subCube = subCubeGroup.objGroup.userData.subCubeInstance;
-                    const faceColor = subCube.faces[this.faceMapping[group]].userData.faceColorName;
-                    cubeState[group].push(faceColor);
+        for (const group of Object.values(this.groups)) {
+            for (const subCube of group) {
+                subCube.updateFaceColors();
+
+                for (const faceMesh of subCube.objGroup.children) {
+                    if (faceMesh.userData.faceColorName !== 'default') {
+                        // Create a string representation of the current item
+                        const currentItem = JSON.stringify([faceMesh.userData.faceColorName, faceMesh.userData.side, faceMesh.userData.position]);
+
+                        // Check if the array already contains an identical item as most faces share a subCube
+                        const alreadyExists = cubeState.some(item => JSON.stringify(item) === currentItem);
+
+                        if (!alreadyExists) {
+                            if (faceMesh.userData.position) {
+                                const faceListIndex = cubeStateMapping[faceMesh.userData.position][faceMesh.userData.side.toUpperCase()];
+                                cubeState[faceListIndex] = faceMesh.userData.faceColorName[0];  // only store first letter of color
+                            }
+                            else { // todo: fix ray casting for this face with position null
+                                cubeState[cubeStateMapping["0.-1.0"][faceMesh.userData.side.toUpperCase()]] = faceMesh.userData.faceColorName[0]
+                            }
+                        }
+                    }
                 }
-            });
-        });
+            }
+        }
 
-        return cubeState;
-    }
-
-    // TODO: Check if this actually works...
-    setCubeState(newState) {
-        Object.keys(this.groups).forEach(group => {
-            this.groups[group].forEach((subCube, index) => {
-                const faceDirection = this.faceMapping[group];
-                const newColorName = newState[group][index];
-                const newColorValue = this.config.faceColors[newColorName];
-
-                if (subCube.faces[faceDirection]) {
-                    // Update the material of the corresponding face
-                    subCube.faces[faceDirection].material.color.set(newColorValue);
-                    // Update the userData with the new color name
-                    subCube.faces[faceDirection].userData.faceColorName = newColorName;
-                }
-            });
-        });
+        return cubeState.join("").toUpperCase();
     }
 
     rotateFace(moveCommand) {
@@ -169,6 +174,8 @@ class Cube {
         while (this.rotationGroup.children.length > 0) {
             const child = this.rotationGroup.children[0]
 
+            child.userData.subCubeInstance.updateFaceColors();
+
             // apply the group's matrix to the object's matrix to retain their rotated positions relative to the group
             child.applyMatrix4(this.rotationGroup.matrixWorld);
 
@@ -209,6 +216,8 @@ class Cube {
             if (z >= 1) this.groups.F.push(subCubeInstance);
         });
     }
+
+
 }
 
 export default Cube;
