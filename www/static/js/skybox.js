@@ -12,11 +12,11 @@ export class Skybox {
         // Define a color for each face direction
         this.faceColors = {
             [FaceDirection.UP]: config.faceColors.white,
-            [FaceDirection.BACK]: config.faceColors.orange,
-            [FaceDirection.LEFT]: config.faceColors.green,
+            [FaceDirection.BACK]: config.faceColors.blue,
+            [FaceDirection.LEFT]: config.faceColors.orange,
             [FaceDirection.DOWN]: config.faceColors.yellow,
-            [FaceDirection.RIGHT]: config.faceColors.blue,
-            [FaceDirection.FRONT]: config.faceColors.red,
+            [FaceDirection.RIGHT]: config.faceColors.red,
+            [FaceDirection.FRONT]: config.faceColors.green,
         };
 
         for (const direction of [

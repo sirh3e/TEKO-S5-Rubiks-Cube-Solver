@@ -102,10 +102,10 @@ class SubCube {
 
         switch (index) {
             case FaceDirection.FRONT:
-                colorValue = this.z === 1 ? faceColors.red : faceColors.default;
+                colorValue = this.z === 1 ? faceColors.green : faceColors.default;
                 break;
             case FaceDirection.BACK:
-                colorValue = this.z === -1 ? faceColors.orange : faceColors.default;
+                colorValue = this.z === -1 ? faceColors.blue : faceColors.default;
                 break;
             case FaceDirection.UP:
                 colorValue = this.y === 1 ? faceColors.white : faceColors.default;
@@ -114,10 +114,10 @@ class SubCube {
                 colorValue = this.y === -1 ? faceColors.yellow : faceColors.default;
                 break;
             case FaceDirection.RIGHT:
-                colorValue = this.x === 1 ? faceColors.blue : faceColors.default;
+                colorValue = this.x === 1 ? faceColors.red : faceColors.default;
                 break;
             case FaceDirection.LEFT:
-                colorValue = this.x === -1 ? faceColors.green : faceColors.default;
+                colorValue = this.x === -1 ? faceColors.orange : faceColors.default;
                 break;
         }
 
