@@ -120,40 +120,45 @@ class Cube {
             return;
         }
 
+
         // Determine the axis and angle for rotation
-        let axis = 'y', angle = Math.PI / 2; // Default values
+        let axis;
+        let angle;
+
         switch (moveCommand.toUpperCase()) {
             case "U":
             case "D'":
                 axis = 'y';
                 angle = -Math.PI / 2;
                 break;
-            case "U'":
-            case "D":
+            case "U2'":
+            case "D2":
                 axis = 'y';
-                angle = Math.PI / 2;
-                break;
-            case "L'":
-            case "R":
-                axis = 'x';
-                angle = -Math.PI / 2;
+                angle = Math.PI;
                 break;
             case "L":
             case "R'":
                 axis = 'x';
                 angle = Math.PI / 2;
                 break;
-            case "F":
-            case "B'":
-                axis = 'z';
-                angle = -Math.PI / 2;
+            case "L2":
+            case "R2'":
+                axis = 'x';
+                angle = Math.PI;
                 break;
             case "F'":
             case "B":
                 axis = 'z';
                 angle = Math.PI / 2;
                 break;
-            // Handle double turns as needed
+            case "F2":
+            case "B2":
+                axis = 'z';
+                angle = Math.PI;
+                break;
+            default:
+                console.error(`There is no move command '${moveCommand}'!`);
+                return;
         }
 
         // Perform the rotation using GSAP 3 for smooth animation
