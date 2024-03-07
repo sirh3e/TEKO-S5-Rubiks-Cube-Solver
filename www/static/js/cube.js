@@ -131,31 +131,56 @@ class Cube {
                 axis = 'y';
                 angle = -Math.PI / 2;
                 break;
-            case "U2'":
+            case "U'":
+            case "D":
+                axis = 'y';
+                angle = Math.PI / 2;
+                break;
+            case "U2":
+                axis = 'y';
+                angle = -Math.PI;
+                break;
             case "D2":
                 axis = 'y';
                 angle = Math.PI;
+                break;
+            case "L'":
+            case "R":
+                axis = 'x';
+                angle = -Math.PI / 2;
                 break;
             case "L":
             case "R'":
                 axis = 'x';
                 angle = Math.PI / 2;
-                break;
+                break
             case "L2":
-            case "R2'":
                 axis = 'x';
                 angle = Math.PI;
+                break;
+            case "R2":
+                axis = 'x';
+                angle = -Math.PI;
                 break;
             case "F'":
             case "B":
                 axis = 'z';
                 angle = Math.PI / 2;
                 break;
+            case "F":
+            case "B'":
+                axis = 'z';
+                angle = -Math.PI / 2;
+                break;
             case "F2":
+                axis = 'z';
+                angle = -Math.PI;
+                break;
             case "B2":
                 axis = 'z';
                 angle = Math.PI;
                 break;
+
             default:
                 console.error(`There is no move command '${moveCommand}'!`);
                 return;
