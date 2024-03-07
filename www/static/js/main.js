@@ -95,12 +95,6 @@ document.getElementById("solve").addEventListener("click", () => {
 });
 
 
-
-document.getElementById("show").addEventListener("click", () => {
-    const cube_state = cube.getCubeState();
-    console.log(cube_state);
-});
-
 function setActiveStep(steps_state){
     const steps_span = document.getElementById('steps');
 

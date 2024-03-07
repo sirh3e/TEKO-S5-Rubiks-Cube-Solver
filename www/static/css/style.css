@@ -12,3 +12,7 @@ body {
 .step-active {
     color: red;
 }
+
+.text-button {
+    width: auto;
+}
