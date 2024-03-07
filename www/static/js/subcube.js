@@ -149,6 +149,11 @@ class SubCube {
         if (faceMesh) {
             // Get the current and new colors
             const currentFaceColorName = faceMesh.userData.faceColorName;
+            // You should not be able to change the dark / black sides
+            if (currentFaceColorName === 'default'){
+                return;
+            }
+
             const newFaceColor = this.getNextFaceColorByName(currentFaceColorName)
 
             // Get the coordinates of the cube
