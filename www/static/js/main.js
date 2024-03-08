@@ -78,7 +78,14 @@ document.getElementById("reset").addEventListener("click", () => {
 
 document.getElementById("solve").addEventListener("click", () => {
     const cubeState = cube.getCubeState();
-    const moves = wasm.solve_cube(cubeState);
+    let moves;
+
+    try {
+        moves = wasm.solve_cube(cubeState);
+    } catch (error) {
+        alert(error);
+    }
+
     const steps = convertMovesToSteps(moves);
     stepsState.setSteps(steps);
 
