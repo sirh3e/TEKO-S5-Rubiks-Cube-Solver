@@ -4,7 +4,7 @@ class SubBall {
     constructor(x, y, z, sphereRadius) {
         // Create geometry and material for the sphere (ball)
         const geometry = new THREE.SphereGeometry(sphereRadius / 5, 32, 32);
-        const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+        const material = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0});
 
         // Create a mesh using the geometry and material and assign it to this.object
         this.object = new THREE.Mesh(geometry, material);
