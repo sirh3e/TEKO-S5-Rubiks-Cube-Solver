@@ -7,6 +7,7 @@ import { initCube, animateCube, onMouseClick } from './controls.js';
 import { initSteps, convertMovesToSteps } from './steps.js';
 import { Skybox } from './skybox';
 import config from '../config/config.json';
+import gsap from "gsap";
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -15,53 +16,64 @@ const composer = new EffectComposer(renderer);
 const controls = new OrbitControls(camera, renderer.domElement);
 const skyBox = new Skybox(scene);  // eslint-disable-line no-unused-vars
 let cube = initCube(scene);
-let stepsState = initSteps();
+let stepsState = initSteps(convertMovesToSteps(["L", "R", "U2", "R'"]));
 
 // button bindings
-document.getElementById("start").addEventListener("click", () => {
-    let moves = null;
+document.getElementById("start").addEventListener("click", async () => {
+    let moves;
     while ((moves = stepsState.undo()) != null) {
-        moves.forEach(move => {
-            cube.rotateFace(move);
-            setActiveStep(stepsState)
-        });
+        for (const move of moves) {
+            await cube.rotateFace(move);
+            setActiveStep(stepsState);
+        }
     }
 });
 
-document.getElementById("prev").addEventListener("click", () => {
+document.getElementById("prev").addEventListener("click", async () => {
+    if(gsap.isTweening(cube.rotationGroup.rotation)){
+        return;
+    }
+
     let moves = stepsState.undo();
     if (moves == null) {
         return;
     }
-    moves.forEach(move => {
-        cube.rotateFace(move);
-        setActiveStep(stepsState);
-    });
-});
-
-document.getElementById("play").addEventListener("click", async () => {
-    let move = null;
-    while ((move = stepsState.do()) != null) {
-        await new Promise(resolve => setTimeout(resolve, config.timeout));
-
-        cube.rotateFace(move);
+    for (const move of moves) {
+        await cube.rotateFace(move);
         setActiveStep(stepsState);
     }
 });
 
-document.getElementById("next").addEventListener("click", () => {
+document.getElementById("play").addEventListener("click", async () => {
+    if(gsap.isTweening(cube.rotationGroup.rotation)){
+        return;
+    }
+
+    let move;
+    while  ((move = stepsState.do()) != null)  {
+        await new Promise(resolve => setTimeout(resolve, config.timeout));
+        await cube.rotateFace(move);
+        setActiveStep(stepsState);
+    }
+});
+
+document.getElementById("next").addEventListener("click", async () => {
+    if(gsap.isTweening(cube.rotationGroup.rotation)){
+        return;
+    }
+
     let move = stepsState.do();
     if (move == null) {
         return;
     }
-    cube.rotateFace(move);
+    await cube.rotateFace(move);
     setActiveStep(stepsState);
 });
 
-document.getElementById("end").addEventListener("click", () => {
-    let move = null;
-    while ((move = stepsState.do()) != null) {
-        cube.rotateFace(move);
+document.getElementById("end").addEventListener("click", async () => {
+    let move;
+    while  ((move = stepsState.do()) != null)  {
+        await cube.rotateFace(move);
         setActiveStep(stepsState);
     }
 });
