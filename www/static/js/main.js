@@ -23,8 +23,8 @@ document.getElementById("start").addEventListener("click", async () => {
     let moves;
     while ((moves = stepsState.undo()) != null) {
         for (const move of moves) {
-            await cube.rotateFace(move);
             setActiveStep(stepsState);
+            await cube.rotateFace(move);
         }
     }
 });
@@ -39,8 +39,8 @@ document.getElementById("prev").addEventListener("click", async () => {
         return;
     }
     for (const move of moves) {
-        await cube.rotateFace(move);
         setActiveStep(stepsState);
+        await cube.rotateFace(move);
     }
 });
 
@@ -52,8 +52,8 @@ document.getElementById("play").addEventListener("click", async () => {
     let move;
     while  ((move = stepsState.do()) != null)  {
         await new Promise(resolve => setTimeout(resolve, config.timeout));
-        await cube.rotateFace(move);
         setActiveStep(stepsState);
+        await cube.rotateFace(move);
     }
 });
 
@@ -66,15 +66,15 @@ document.getElementById("next").addEventListener("click", async () => {
     if (move == null) {
         return;
     }
-    await cube.rotateFace(move);
     setActiveStep(stepsState);
+    await cube.rotateFace(move);
 });
 
 document.getElementById("end").addEventListener("click", async () => {
     let move;
     while  ((move = stepsState.do()) != null)  {
-        await cube.rotateFace(move);
         setActiveStep(stepsState);
+        await cube.rotateFace(move);
     }
 });
 
