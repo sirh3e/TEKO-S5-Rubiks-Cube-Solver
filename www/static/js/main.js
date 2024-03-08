@@ -109,8 +109,8 @@ function setActiveStep(stepsState) {
     const children = Array.from(stepsSpan.children);
     children.forEach(child => child.classList.remove('step-active'));
 
-    if (stepsSpan.children[stepsState.index]) {
-        stepsSpan.children[stepsState.index].classList.add('step-active');
+    if (stepsSpan.children[stepsState.index - 1]) {
+        stepsSpan.children[stepsState.index - 1].classList.add('step-active');
     }
 }
 
