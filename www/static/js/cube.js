@@ -198,6 +198,7 @@ class Cube {
                 // Dissolve the group
                 while (this.rotationGroup.children.length > 0) {
                     const child = this.rotationGroup.children[0];
+                    child.userData.subCubeInstance.updateFaceColors();
                     child.applyMatrix4(this.rotationGroup.matrixWorld);
                     this.masterGroup.add(child);
                     this.rotationGroup.remove(child);
