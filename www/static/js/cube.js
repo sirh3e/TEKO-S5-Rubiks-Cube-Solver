@@ -103,7 +103,7 @@ class Cube {
     }
 
     rotateFace(moveCommand) {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             // reset rotation of group
             this.rotationGroup.rotation.set(0, 0, 0);
 
