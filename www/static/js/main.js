@@ -68,6 +68,11 @@ document.getElementById("end").addEventListener("click", () => {
 });
 
 document.getElementById("reset").addEventListener("click", () => {
+    scene.remove(cube.masterGroup);
+    const stepsSpan = document.getElementById('steps');
+    while (stepsSpan.firstChild) {
+        stepsSpan.removeChild(stepsSpan.lastChild);
+    }
     cube = initCube(scene);
     stepsState = initSteps();
 });
