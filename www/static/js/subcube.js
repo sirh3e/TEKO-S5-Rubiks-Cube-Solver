@@ -158,9 +158,9 @@ class SubCube {
 
             // Get the coordinates of the cube
             const cubeCoordinates = JSON.stringify([
-                this.x,
-                this.y,
-                this.z
+                Math.round(this.x),
+                Math.round(this.y),
+                Math.round(this.z)
             ]);
 
             // Check if cube is static (middle of each layer)
