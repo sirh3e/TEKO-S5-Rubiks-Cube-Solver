@@ -7,6 +7,7 @@ import { initCube, animateCube, onMouseClick } from './controls.js';
 import {initSteps, convertMovesToSteps} from './steps.js';
 import { Skybox } from './skybox';
 import config from '../config/config.json';
+import gsap from "gsap";
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -28,6 +29,10 @@ document.getElementById("start").addEventListener("click", () => {
     }
 });
 document.getElementById("prev").addEventListener("click", () => {
+    if(gsap.isTweening(cube.rotationGroup.rotation)){
+        return;
+    }
+
     let moves = steps_state.undo();
     if (moves == null) {
         return;
@@ -38,6 +43,10 @@ document.getElementById("prev").addEventListener("click", () => {
     });
 });
 document.getElementById("playPause").addEventListener("click", async () => {
+    if(gsap.isTweening(cube.rotationGroup.rotation)){
+        return;
+    }
+
     //ToDo add a pause function
     let move = null;
     while((move = steps_state.do()) != null){
@@ -48,6 +57,10 @@ document.getElementById("playPause").addEventListener("click", async () => {
     }
 });
 document.getElementById("next").addEventListener("click", () => {
+    if(gsap.isTweening(cube.rotationGroup.rotation)){
+        return;
+    }
+
     let move = steps_state.do();
     if (move == null) {
         return;
@@ -56,6 +69,10 @@ document.getElementById("next").addEventListener("click", () => {
     setActiveStep(steps_state);
 });
 document.getElementById("end").addEventListener("click", () => {
+    if(gsap.isTweening(cube.rotationGroup.rotation)){
+        return;
+    }
+
     let move = null;
     while((move = steps_state.do()) != null){
         cube.rotateFace(move);
@@ -63,6 +80,10 @@ document.getElementById("end").addEventListener("click", () => {
     }
 });
 document.getElementById("reset").addEventListener("click", () => {
+    if(gsap.isTweening(cube.rotationGroup.rotation)){
+        return;
+    }
+
     cube = initCube(scene);
     steps_state = initSteps();
 });
