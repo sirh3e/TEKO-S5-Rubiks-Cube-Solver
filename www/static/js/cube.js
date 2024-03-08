@@ -201,7 +201,6 @@ class Cube {
                     child.userData.subCubeInstance.updateFaceColors();
                     child.applyMatrix4(this.rotationGroup.matrixWorld);
                     this.masterGroup.add(child);
-                    this.rotationGroup.remove(child);
                 }
 
                 // Remove the group from the scene
