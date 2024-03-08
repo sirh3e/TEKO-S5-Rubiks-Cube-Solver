@@ -36,7 +36,6 @@ class Step {
         this.move = move;
     }
 
-
     do() {
         return this.move;
     }
@@ -110,7 +109,7 @@ class Step {
     }
 }
 
-export function initSteps(steps){
+export function initSteps(steps) {
     return new Steps(steps);
 }
 
@@ -124,7 +123,7 @@ class Steps {
         this.steps = steps;
     }
 
-    setSteps(steps){
+    setSteps(steps) {
         this.init(steps);
     }
 
