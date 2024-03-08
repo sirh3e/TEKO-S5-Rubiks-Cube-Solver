@@ -103,112 +103,116 @@ class Cube {
     }
 
     rotateFace(moveCommand) {
-        // reset rotation of group
-        this.rotationGroup.rotation.set(0, 0, 0);
+        return new Promise((resolve, reject) => {
+            // reset rotation of group
+            this.rotationGroup.rotation.set(0, 0, 0);
 
-        // (re-)add the empty group to the scene
-        this.scene.add(this.rotationGroup);
+            // (re-)add the empty group to the scene
+            this.scene.add(this.rotationGroup);
 
-        // add sub cubes of face to a group
-        const face = moveCommand[0].toUpperCase();  // face is the first letter of a command
+            // add sub cubes of face to a group
+            const face = moveCommand[0].toUpperCase();  // face is the first letter of a command
 
-        try {
-            for (const subCube of this.groups[face]) {
-                this.rotationGroup.add(subCube.objGroup);
-            }
-        } catch {
-            console.error(`There is no face '${face}'!`);
-            return;
-        }
-
-
-        // Determine the axis and angle for rotation
-        let axis;
-        let angle;
-
-        switch (moveCommand.toUpperCase()) {
-            case "U":
-            case "D'":
-                axis = 'y';
-                angle = -Math.PI / 2;
-                break;
-            case "U'":
-            case "D":
-                axis = 'y';
-                angle = Math.PI / 2;
-                break;
-            case "U2":
-                axis = 'y';
-                angle = -Math.PI;
-                break;
-            case "D2":
-                axis = 'y';
-                angle = Math.PI;
-                break;
-            case "L'":
-            case "R":
-                axis = 'x';
-                angle = -Math.PI / 2;
-                break;
-            case "L":
-            case "R'":
-                axis = 'x';
-                angle = Math.PI / 2;
-                break
-            case "L2":
-                axis = 'x';
-                angle = Math.PI;
-                break;
-            case "R2":
-                axis = 'x';
-                angle = -Math.PI;
-                break;
-            case "F'":
-            case "B":
-                axis = 'z';
-                angle = Math.PI / 2;
-                break;
-            case "F":
-            case "B'":
-                axis = 'z';
-                angle = -Math.PI / 2;
-                break;
-            case "F2":
-                axis = 'z';
-                angle = -Math.PI;
-                break;
-            case "B2":
-                axis = 'z';
-                angle = Math.PI;
-                break;
-
-            default:
-                console.error(`There is no move command '${moveCommand}'!`);
-                return;
-        }
-
-        // Perform the rotation using GSAP 3 for smooth animation
-        gsap.to(this.rotationGroup.rotation, {
-            duration: 0.3,
-            [axis]: `+=${angle}`,
-            onComplete: () => {
-                // Update the world matrix of the group after rotating
-                this.rotationGroup.updateMatrixWorld();
-
-                // Dissolve the group
-                while (this.rotationGroup.children.length > 0) {
-                    const child = this.rotationGroup.children[0];
-                    child.userData.subCubeInstance.updateFaceColors();
-                    child.applyMatrix4(this.rotationGroup.matrixWorld);
-                    this.masterGroup.add(child);
+            try {
+                for (const subCube of this.groups[face]) {
+                    this.rotationGroup.add(subCube.objGroup);
                 }
-
-                // Remove the group from the scene
-                this.scene.remove(this.rotationGroup);
-
-                // Remap logical groups
-                this.remapSubCubesToGroups();
+            } catch {
+                console.error(`There is no face '${face}'!`);
+                return;
             }
+
+
+            // Determine the axis and angle for rotation
+            let axis;
+            let angle;
+
+            switch (moveCommand.toUpperCase()) {
+                case "U":
+                case "D'":
+                    axis = 'y';
+                    angle = -Math.PI / 2;
+                    break;
+                case "U'":
+                case "D":
+                    axis = 'y';
+                    angle = Math.PI / 2;
+                    break;
+                case "U2":
+                    axis = 'y';
+                    angle = -Math.PI;
+                    break;
+                case "D2":
+                    axis = 'y';
+                    angle = Math.PI;
+                    break;
+                case "L'":
+                case "R":
+                    axis = 'x';
+                    angle = -Math.PI / 2;
+                    break;
+                case "L":
+                case "R'":
+                    axis = 'x';
+                    angle = Math.PI / 2;
+                    break
+                case "L2":
+                    axis = 'x';
+                    angle = Math.PI;
+                    break;
+                case "R2":
+                    axis = 'x';
+                    angle = -Math.PI;
+                    break;
+                case "F'":
+                case "B":
+                    axis = 'z';
+                    angle = Math.PI / 2;
+                    break;
+                case "F":
+                case "B'":
+                    axis = 'z';
+                    angle = -Math.PI / 2;
+                    break;
+                case "F2":
+                    axis = 'z';
+                    angle = -Math.PI;
+                    break;
+                case "B2":
+                    axis = 'z';
+                    angle = Math.PI;
+                    break;
+
+                default:
+                    console.error(`There is no move command '${moveCommand}'!`);
+                    return;
+            }
+
+            // Perform the rotation using GSAP 3 for smooth animation
+            gsap.to(this.rotationGroup.rotation, {
+                duration: 0.3,
+                [axis]: `+=${angle}`,
+                onComplete: () => {
+                    // Update the world matrix of the group after rotating
+                    this.rotationGroup.updateMatrixWorld();
+
+                    // Dissolve the group
+                    while (this.rotationGroup.children.length > 0) {
+                        const child = this.rotationGroup.children[0];
+                        child.userData.subCubeInstance.updateFaceColors();
+                        child.applyMatrix4(this.rotationGroup.matrixWorld);
+                        this.masterGroup.add(child);
+                    }
+
+                    // Remove the group from the scene
+                    this.scene.remove(this.rotationGroup);
+
+                    // Remap logical groups
+                    this.remapSubCubesToGroups();
+
+                    resolve(); // Resolve the promise here
+                }
+            });
         });
     }
 
