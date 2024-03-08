@@ -139,8 +139,6 @@ class Steps {
     }
 
     undo() {
-        console.log(this.index);
-        console.log(this.steps.length);
         if (this.index <= 0) {
             return null;
         }
