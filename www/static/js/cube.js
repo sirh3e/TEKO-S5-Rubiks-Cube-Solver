@@ -3,6 +3,7 @@ import config from '../config/config.json';
 import SubCube from './subcube'
 import SubBall from "./subBall";
 import gsap from 'gsap';
+import cubeStateMapping from '../config/cubeStateMapping.json'
 
 
 class Cube {
