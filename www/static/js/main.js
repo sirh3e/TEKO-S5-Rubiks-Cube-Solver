@@ -81,7 +81,7 @@ document.getElementById("solve").addEventListener("click", () => {
     const stepsSpan = document.getElementById('steps');
     stepsState.steps.forEach(step => {
         const stepSpan = document.createElement('span');
-        stepSpan.innerText = step.move;
+        stepSpan.innerText = `${step.move} `;
         stepsSpan.appendChild(stepSpan);
     });
 
