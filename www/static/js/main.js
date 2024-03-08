@@ -39,8 +39,7 @@ document.getElementById("prev").addEventListener("click", () => {
     });
 });
 
-document.getElementById("playPause").addEventListener("click", async () => {
-    //ToDo add a pause function
+document.getElementById("play").addEventListener("click", async () => {
     let move = null;
     while ((move = stepsState.do()) != null) {
         await new Promise(resolve => setTimeout(resolve, config.timeout));
