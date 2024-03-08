@@ -150,7 +150,7 @@ class SubCube {
             // Get the current and new colors
             const currentFaceColorName = faceMesh.userData.faceColorName;
             // You should not be able to change the dark / black sides
-            if (currentFaceColorName === 'default'){
+            if (currentFaceColorName === 'default') {
                 return;
             }
 
@@ -158,9 +158,9 @@ class SubCube {
 
             // Get the coordinates of the cube
             const cubeCoordinates = JSON.stringify([
-                this.x,
-                this.y,
-                this.z
+                Math.round(this.x),
+                Math.round(this.y),
+                Math.round(this.z)
             ]);
 
             // Check if cube is static (middle of each layer)
@@ -173,7 +173,7 @@ class SubCube {
                 faceMesh.userData.faceColorName = newFaceColor.name;
             }
             else {
-                console.log("Cannot change center cube!");
+                console.warn("Cannot change center cube!");
             }
         }
     }
@@ -206,7 +206,7 @@ class SubCube {
                     this.faces[name] = mesh;
                     mesh.userData.side = name
                 }
-            } else {
+            } else if (config.debug) {
                 console.log('No intersections found.');
             }
 
@@ -217,7 +217,7 @@ class SubCube {
             if (intersectsSubBall.length > 0) {
                 const name = intersectsSubBall[0].object.userData.name  // ball inside cube will be hit first
                 mesh.userData.position = name;
-            } else {
+            } else if (config.debug) {
                 console.log('No intersections with subballs found.');
             }
 

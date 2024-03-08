@@ -4,7 +4,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { initCube, animateCube, onMouseClick } from './controls.js';
-import {initSteps, convertMovesToSteps} from './steps.js';
+import { initSteps, convertMovesToSteps } from './steps.js';
 import { Skybox } from './skybox';
 import config from '../config/config.json';
 import gsap from "gsap";
@@ -16,15 +16,15 @@ const composer = new EffectComposer(renderer);
 const controls = new OrbitControls(camera, renderer.domElement);
 const skyBox = new Skybox(scene);  // eslint-disable-line no-unused-vars
 let cube = initCube(scene);
-let steps_state = initSteps(convertMovesToSteps(["L", "R", "U2", "R'"]));
+let stepsState = initSteps(convertMovesToSteps(["L", "R", "U2", "R'"]));
 
-
+// button bindings
 document.getElementById("start").addEventListener("click", async () => {
     let moves;
-    while ((moves = steps_state.undo()) != null) {
+    while ((moves = stepsState.undo()) != null) {
         for (const move of moves) {
+            setActiveStep(stepsState);
             await cube.rotateFace(move);
-            setActiveStep(steps_state);
         }
     }
 });
@@ -34,27 +34,26 @@ document.getElementById("prev").addEventListener("click", async () => {
         return;
     }
 
-    let moves = steps_state.undo();
+    let moves = stepsState.undo();
     if (moves == null) {
         return;
     }
     for (const move of moves) {
+        setActiveStep(stepsState);
         await cube.rotateFace(move);
-        setActiveStep(steps_state);
     }
 });
 
-document.getElementById("playPause").addEventListener("click", async () => {
+document.getElementById("play").addEventListener("click", async () => {
     if(gsap.isTweening(cube.rotationGroup.rotation)){
         return;
     }
 
-    //ToDo add a pause function
     let move;
-    while ((move = steps_state.do()) != null) {
+    while  ((move = stepsState.do()) != null)  {
         await new Promise(resolve => setTimeout(resolve, config.timeout));
+        setActiveStep(stepsState);
         await cube.rotateFace(move);
-        setActiveStep(steps_state);
     }
 });
 
@@ -63,72 +62,69 @@ document.getElementById("next").addEventListener("click", async () => {
         return;
     }
 
-    let move = steps_state.do();
+    let move = stepsState.do();
     if (move == null) {
         return;
     }
+    setActiveStep(stepsState);
     await cube.rotateFace(move);
-    setActiveStep(steps_state);
 });
 
 document.getElementById("end").addEventListener("click", async () => {
     let move;
-    while ((move = steps_state.do()) != null) {
+    while  ((move = stepsState.do()) != null)  {
+        setActiveStep(stepsState);
         await cube.rotateFace(move);
-        setActiveStep(steps_state);
     }
 });
 
 document.getElementById("reset").addEventListener("click", () => {
+    scene.remove(cube.masterGroup);
+    const stepsSpan = document.getElementById('steps');
+    while (stepsSpan.firstChild) {
+        stepsSpan.removeChild(stepsSpan.lastChild);
+    }
     cube = initCube(scene);
-    steps_state = initSteps();
+    stepsState = initSteps();
 });
 
-// B = green
-// D = orange
-// F = red
-// L = yellow
-// R = white
-// U = blue
-
 document.getElementById("solve").addEventListener("click", () => {
-    const cube_state = cube.getCubeState();
-    const moves = wasm.solve_cube(cube_state);
-    const steps = convertMovesToSteps(moves);
-    steps_state.setSteps(steps);
+    const cubeState = cube.getCubeState();
+    let moves;
 
-    const steps_span = document.getElementById('steps');
-    steps_state.steps.forEach(step => {
-        const step_span = document.createElement('span');
-        step_span.innerText = step.move;
-        steps_span.appendChild(step_span);
+    try {
+        moves = wasm.solve_cube(cubeState);
+    } catch (error) {
+        alert(error);
+    }
+
+    const steps = convertMovesToSteps(moves);
+    stepsState.setSteps(steps);
+
+    const stepsSpan = document.getElementById('steps');
+    stepsState.steps.forEach(step => {
+        const stepSpan = document.createElement('span');
+        stepSpan.innerText = `${step.move} `;
+        stepsSpan.appendChild(stepSpan);
     });
 
-    setActiveStep(steps_state);
+    setActiveStep(stepsState);
 
-    if(config.debug) {
+    if (config.debug) {
         console.log(JSON.stringify(steps));
     }
 });
 
+function setActiveStep(stepsState) {
+    const stepsSpan = document.getElementById('steps');
 
-
-document.getElementById("show").addEventListener("click", () => {
-    const cube_state = cube.getCubeState();
-    console.log(cube_state);
-});
-
-function setActiveStep(steps_state){
-    const steps_span = document.getElementById('steps');
-
-    const children = Array.from(steps_span.children);
+    const children = Array.from(stepsSpan.children);
     children.forEach(child => child.classList.remove('step-active'));
 
-    if (steps_span.children[steps_state.index]){
-        steps_span.children[steps_state.index].classList.add('step-active');
+    if (stepsSpan.children[stepsState.index - 1]) {
+        stepsSpan.children[stepsState.index - 1].classList.add('step-active');
     }
 }
-
 
 function onWindowResize() {
     // Update the camera's aspect ratio
@@ -140,13 +136,11 @@ function onWindowResize() {
     composer.setSize(window.innerWidth, window.innerHeight);
 }
 
-
 // Event-listener setup
 function setupEventListeners() {
     window.addEventListener('resize', onWindowResize);
     window.addEventListener('click', event => onMouseClick(event, scene, camera, renderer));
 }
-
 
 // Lighting setup
 function setupLighting() {
@@ -158,7 +152,6 @@ function setupLighting() {
     scene.add(directionalLight);
 }
 
-
 // Camera setup
 function setupCamera() {
     camera.position.set(
@@ -167,7 +160,6 @@ function setupCamera() {
         config.cameraPosition.z
     );
 }
-
 
 // Scene setup
 function setupScene() {
@@ -189,7 +181,6 @@ function setupScene() {
     const renderPass = new RenderPass(scene, camera);
     composer.addPass(renderPass);
 }
-
 
 function animate() {
     requestAnimationFrame(animate);
