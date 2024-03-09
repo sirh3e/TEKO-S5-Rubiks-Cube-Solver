@@ -11,10 +11,10 @@ run: build
 	docker run --name $(CONTAINER_NAME) -d $(IMAGE_NAME)
 
 up:
-	docker-compose -f $(COMPOSE_FILE) up -d
+	docker compose -f $(COMPOSE_FILE) up -d
 
 down:
-	docker-compose -f $(COMPOSE_FILE) down
+	docker compose -f $(COMPOSE_FILE) down
 
 clean-image:
 	docker rmi $(IMAGE_NAME)
