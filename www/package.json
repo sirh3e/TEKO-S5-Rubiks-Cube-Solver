@@ -1,6 +1,6 @@
 {
   "name": "rubiks-cube-solver",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "create an app to consume rust-generated wasm packages",
   "main": "index.js",
   "bin": {
@@ -22,12 +22,6 @@
     "rust",
     "webpack"
   ],
-  "author": "Ashley Williams <ashley666ashley@gmail.com>",
-  "license": "(MIT OR Apache-2.0)",
-  "bugs": {
-    "url": "https://github.com/rustwasm/create-wasm-app/issues"
-  },
-  "homepage": "https://github.com/rustwasm/create-wasm-app#readme",
   "dependencies": {
     "gsap": "^3.12.5",
     "three": "^0.160.0",
@@ -42,9 +36,6 @@
     "eslint-plugin-n": "^16.6.2",
     "eslint-plugin-promise": "^6.1.1",
     "hello-wasm-pack": "^0.1.0",
-    "vite": "^5.0.11",
-    "vite-plugin-top-level-await": "^1.4.1",
-    "vite-plugin-wasm": "^3.3.0",
     "webpack": "^4.29.3",
     "webpack-cli": "^3.1.0",
     "webpack-dev-server": "^3.1.5"
