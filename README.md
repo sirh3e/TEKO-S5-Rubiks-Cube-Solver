@@ -1,5 +1,9 @@
-# TEKO-S5-Rubiks-Cube-Solver
+# Rubik's Cube Solver
+A rubik's cube solver using Three.js and Rust.
 
 ## Usage
+- `wasm-pack install`
+- `wasm-pack build`
+- `cd www`
 - `npm install`
-- `npx vite`
+- `npm run start`
