@@ -8,4 +8,5 @@ A rubik's cube solver using Three.js and Rust.
 - `npm install`
 - `npm run start`
 
+## Frontend
 ![](./frontend.png)
