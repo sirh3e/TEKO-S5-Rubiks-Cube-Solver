@@ -7,3 +7,6 @@ A rubik's cube solver using Three.js and Rust.
 - `cd www`
 - `npm install`
 - `npm run start`
+
+## Frontend
+![](./frontend.png)
